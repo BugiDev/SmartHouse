@@ -51,14 +51,11 @@ public class LoginActivity extends Activity {
 	private View mLoginStatusView;
 	private TextView mLoginStatusMessageView;
 
-	@SuppressLint("NewApi")
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_login);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		// Set up the login form.
 		mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
@@ -92,7 +89,7 @@ public class LoginActivity extends Activity {
 				});
 	}
 
-	@SuppressLint("NewApi")
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
@@ -105,10 +102,12 @@ public class LoginActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
 	        case android.R.id.home:
-	            // app icon in action bar clicked; go home
-	            Intent intent = new Intent(this, SplashScreenActivity.class);
-	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	            startActivity(intent);
+	        	
+	        	/**
+	        	 * TODO: Handle on click.
+	        	 */
+	        	
+	            finish();
 	            return true;
 	        default:
 	            return super.onOptionsItemSelected(item);
