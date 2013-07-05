@@ -1,0 +1,10 @@
+<resources>
+
+    
+    <string name="dialog_description_network">Warning dialog. There is no Internet connection.</string>
+    <string name="dialog_button_ok">OK</string>
+    <string name="dialog_button_cancle">Cancle</string>
+    <string name="dialog_title_network">Warning! No Internet connection!</string>
+    <string name="dialog_text_network">You don\'t have Internet connection. If You want to use the application, please connect to the Internet.</string>
+    
+</resources>
