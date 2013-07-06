@@ -4,10 +4,14 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.SoundPool;
+import android.media.SoundPool.OnLoadCompleteListener;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.provider.Settings;
 import android.view.Menu;
 import android.view.View;
@@ -20,13 +24,30 @@ public class SplashScreenActivity extends Activity {
 
 	private static final int SPLASH_TIME = 2 * 1000;// 3 seconds
 	Dialog dialog = null;
+	private SoundPool soundPool;
+	private int soundID;
+	boolean loaded = false;
+	Vibrator vibe;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash_screen);
+		vibe = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
+		this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
-		dialog = new Dialog(this);
+		soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
+		soundPool.setOnLoadCompleteListener(new OnLoadCompleteListener() {
+            @Override
+            public void onLoadComplete(SoundPool soundPool, int sampleId,
+                    int status) {
+                loaded = true;
+            }
+        });
+		
+		soundID = soundPool.load(this, R.raw.button_click, 1);
+
+		dialog = new Dialog(this, R.style.custom_dialog);
 		prepDialog();
 
 	}
@@ -62,6 +83,8 @@ public class SplashScreenActivity extends Activity {
 		dialogButtonOK.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				fireSound();
+				vibe.vibrate(80);
 				dialog.dismiss();
 				Intent intent = new Intent(Settings.ACTION_SETTINGS);
 				startActivity(intent);
@@ -74,6 +97,8 @@ public class SplashScreenActivity extends Activity {
 		dialogButtonCancle.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				fireSound();
+				vibe.vibrate(80);
 				dialog.dismiss();
 				finish();
 			}
@@ -130,6 +155,19 @@ public class SplashScreenActivity extends Activity {
 		showSplash();
 		super.onResume();
 	}
-	
 
+	public void fireSound(){
+		// Getting the user sound settings
+	      AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+	      float actualVolume = (float) audioManager
+	          .getStreamVolume(AudioManager.STREAM_MUSIC);
+	      float maxVolume = (float) audioManager
+	          .getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+	      float volume = actualVolume / maxVolume;
+	      // Is the sound loaded already?
+	      if (loaded) {
+	        soundPool.play(soundID, volume, volume, 1, 0, 1f);
+	      }
+	}
+	
 }
