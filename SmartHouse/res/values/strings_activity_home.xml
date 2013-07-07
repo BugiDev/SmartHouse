@@ -1,0 +1,9 @@
+<resources>
+
+    <!-- Home menu -->
+    <string name="devices">Devices</string>
+    <string name="info">About us</string>
+    <string name="settings">Settings</string>
+    <string name="premade_mods">Premade \n mods</string>
+
+</resources>
