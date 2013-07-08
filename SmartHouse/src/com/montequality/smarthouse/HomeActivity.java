@@ -111,8 +111,9 @@ public class HomeActivity extends Activity {
 
 	@Override
 	public void onBackPressed() {
-		finish();
+		this.finish();
 		super.onBackPressed();
+		
 	}
 
 }

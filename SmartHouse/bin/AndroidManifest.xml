@@ -29,7 +29,7 @@
         <activity
             android:name="com.montequality.smarthouse.LoginActivity"
             android:label="@string/title_activity_login"
-            android:windowSoftInputMode="adjustResize|stateVisible" >
+            android:windowSoftInputMode="adjustResize|stateAlwaysVisible|stateVisible" >
         </activity>
         <activity
             android:name="com.montequality.smarthouse.HomeActivity"

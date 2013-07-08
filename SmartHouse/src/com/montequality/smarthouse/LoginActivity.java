@@ -4,16 +4,20 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -49,6 +53,10 @@ public class LoginActivity extends Activity {
 	private View mLoginFormView;
 	private View mLoginStatusView;
 	private TextView mLoginStatusMessageView;
+	private CheckBox saveCheck;
+	
+	SharedPreferences preferences;
+	SharedPreferences.Editor editor;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +68,12 @@ public class LoginActivity extends Activity {
 		mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
 		mEmailView = (EditText) findViewById(R.id.email);
 		mEmailView.setText(mEmail);
+		
+		saveCheck = (CheckBox) findViewById(R.id.login_save_check);
+		preferences = getSharedPreferences("smartHouse_auth", Context.MODE_PRIVATE);
+		editor = preferences.edit();
+		
+		
 
 		mPasswordView = (EditText) findViewById(R.id.password);
 		mPasswordView
@@ -86,6 +100,15 @@ public class LoginActivity extends Activity {
 						attemptLogin();
 					}
 				});
+		
+		
+		
+		if(preferences.contains("username") && preferences.contains("password")){
+			Log.d("PROVERA", "Prolazi kroz prvi check");
+			Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+			startActivity(intent);
+		}
+		
 	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -213,8 +236,8 @@ public class LoginActivity extends Activity {
 	
 	@Override
 	public void onBackPressed() {
-		finish();
 		super.onBackPressed();
+		finish();
 	}
 
 	/**
@@ -251,6 +274,16 @@ public class LoginActivity extends Activity {
 			showProgress(false);
 
 			if (success) {
+				
+				
+				if(saveCheck.isChecked()){
+					editor.putString("username", mEmailView.getText().toString());
+					editor.putString("password", mPasswordView.getText().toString());
+					editor.commit();
+					Log.d("PROVERA", "Prolazi kroz cuvanje");
+				}
+				
+				
 				Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
 				startActivity(intent);
 			} else {

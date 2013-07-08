@@ -5,6 +5,7 @@
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
+    <string name="save_email_and_pass">Save email \n and password?</string>
     <string name="action_login_register">Login</string>
     <string name="action_login_short">Login</string>
     <string name="action_forgot_password">Recover lost password</string>

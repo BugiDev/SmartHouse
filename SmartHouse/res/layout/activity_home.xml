@@ -43,7 +43,8 @@
         android:layout_height="80dp"
         android:layout_above="@+id/textView4"
         android:layout_alignRight="@+id/textView1"
-        android:src="@drawable/ic_launcher" />
+        android:src="@drawable/settings"
+        android:contentDescription="@string/settings_desc"  />
 
     <ImageButton
         android:id="@+id/info_button"
@@ -51,7 +52,8 @@
         android:layout_height="80dp"
         android:layout_alignLeft="@+id/textView2"
         android:layout_below="@+id/relativeLayout1"
-        android:src="@drawable/ic_launcher" />
+        android:src="@drawable/about"
+        android:contentDescription="@string/info_desc"  />
 
     <TextView
         android:id="@+id/textView3"
@@ -81,7 +83,8 @@
         android:layout_height="80dp"
         android:layout_above="@+id/textView2"
         android:layout_alignLeft="@+id/textView2"
-        android:src="@drawable/ic_launcher" />
+        android:src="@drawable/premade_mods"
+        android:contentDescription="@string/premade_mods_desc"  />
 
     <ImageButton
         android:id="@+id/devices_button"
@@ -89,6 +92,7 @@
         android:layout_height="80dp"
         android:layout_alignTop="@+id/premade_mods_button"
         android:layout_toLeftOf="@+id/relativeLayout1"
-        android:src="@drawable/ic_launcher" />
+        android:src="@drawable/devices"
+        android:contentDescription="@string/devices_desc" />
 
 </RelativeLayout>
