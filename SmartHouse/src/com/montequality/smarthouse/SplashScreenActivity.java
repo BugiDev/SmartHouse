@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.media.SoundPool.OnLoadCompleteListener;
@@ -28,6 +29,12 @@ public class SplashScreenActivity extends Activity {
 	private int soundID;
 	boolean loaded = false;
 	Vibrator vibe;
+	
+	SharedPreferences preferences;
+	SharedPreferences.Editor editor;
+	
+	boolean soundSettings;
+	boolean vibraSettings;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +42,23 @@ public class SplashScreenActivity extends Activity {
 		setContentView(R.layout.activity_splash_screen);
 		vibe = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
 		this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
+		
+		preferences = getSharedPreferences("smartHouse_auth",
+				Context.MODE_PRIVATE);
+		editor = preferences.edit();
+		
+		if(!preferences.contains("sound")){
+			editor.putBoolean("sound", true);
+			editor.commit();
+		}
+		
+		if(!preferences.contains("vibra")){
+			editor.putBoolean("vibra", true);
+			editor.commit();
+		}
+
+		soundSettings = preferences.getBoolean("sound", true);
+		vibraSettings = preferences.getBoolean("vibra", true);
 
 		soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
 		soundPool.setOnLoadCompleteListener(new OnLoadCompleteListener() {
@@ -83,8 +107,13 @@ public class SplashScreenActivity extends Activity {
 		dialogButtonOK.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				fireSound();
-				vibe.vibrate(80);
+				if(soundSettings){
+					fireSound();
+				}
+				
+				if(vibraSettings){
+					vibe.vibrate(80);
+				}
 				dialog.dismiss();
 				Intent intent = new Intent(Settings.ACTION_SETTINGS);
 				startActivity(intent);
@@ -97,8 +126,13 @@ public class SplashScreenActivity extends Activity {
 		dialogButtonCancle.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				fireSound();
-				vibe.vibrate(80);
+				if(soundSettings){
+					fireSound();
+				}
+				
+				if(vibraSettings){
+					vibe.vibrate(80);
+				}
 				dialog.dismiss();
 				finish();
 			}
@@ -153,6 +187,8 @@ public class SplashScreenActivity extends Activity {
 		}
 
 		showSplash();
+		soundSettings = preferences.getBoolean("sound", true);
+		vibraSettings = preferences.getBoolean("vibra", true);
 		super.onResume();
 	}
 

@@ -11,7 +11,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -104,7 +103,6 @@ public class LoginActivity extends Activity {
 		
 		
 		if(preferences.contains("username") && preferences.contains("password")){
-			Log.d("PROVERA", "Prolazi kroz prvi check");
 			Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
 			startActivity(intent);
 		}
@@ -280,7 +278,6 @@ public class LoginActivity extends Activity {
 					editor.putString("username", mEmailView.getText().toString());
 					editor.putString("password", mPasswordView.getText().toString());
 					editor.commit();
-					Log.d("PROVERA", "Prolazi kroz cuvanje");
 				}
 				
 				

@@ -11,4 +11,6 @@
     <string name="info_desc">About us button</string>
     <string name="settings_desc">Settings button</string>
     <string name="premade_mods_desc">Premade \n mods button</string>
+    
+    <string name="premade_mods_toast_message">This page is in construction.</string>
 </resources>

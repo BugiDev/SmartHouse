@@ -1,0 +1,18 @@
+<resources>
+
+    <string name="settings_sound_text">Allow on click sound?</string>
+    <string name="settings_vibra_text">Allow on click vibration?</string>
+    <string name="settings_button_text">Logout</string>
+    
+    <string name="settings_dialog_text">If you click "OK" your credentials will be deleted and you will have to login again.</string>
+    <string name="settings_dialog_title">Are you sure you want to logout?</string>
+    
+    <string name="settings_logout_toast_message">Your credentials are deleted. You are logged out.</string>
+    
+    <string name="settings_sound_enabled_toast_message">Sound enabled</string>
+    <string name="settings_sound_disabled_toast_message">Sound disabled</string>
+    
+    <string name="settings_vibra_enabled_toast_message">Vibration enabled</string>
+    <string name="settings_vibra_disabled_toast_message">Vibration disabled</string>
+    
+</resources>

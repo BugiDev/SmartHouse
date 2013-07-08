@@ -35,6 +35,22 @@
             android:name="com.montequality.smarthouse.HomeActivity"
             android:label="@string/title_activity_home" >
         </activity>
+        <activity
+            android:name="com.montequality.smarthouse.InfoActivity"
+            android:label="@string/title_activity_info"
+            android:parentActivityName="com.montequality.smarthouse.HomeActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.montequality.smarthouse.HomeActivity" />
+        </activity>
+        <activity
+            android:name="com.montequality.smarthouse.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName="com.montequality.smarthouse.HomeActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.montequality.smarthouse.HomeActivity" />
+        </activity>
     </application>
 
 </manifest>
