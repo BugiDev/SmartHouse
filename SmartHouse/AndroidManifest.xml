@@ -51,6 +51,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.montequality.smarthouse.HomeActivity" />
         </activity>
+        <activity
+            android:name="com.montequality.smarthouse.MainDevicesListActivity"
+            android:label="@string/title_activity_main_devices_list"
+            android:parentActivityName="com.montequality.smarthouse.HomeActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.montequality.smarthouse.HomeActivity" />
+        </activity>
     </application>
 
 </manifest>

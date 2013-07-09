@@ -31,26 +31,37 @@ public final class R {
     }
     public static final class drawable {
         public static final int about=0x7f020000;
-        public static final int btn_default_disabled_focused_holo_light=0x7f020001;
-        public static final int btn_default_disabled_holo_light=0x7f020002;
-        public static final int btn_default_focused_holo_light=0x7f020003;
-        public static final int btn_default_pressed_holo_light=0x7f020004;
-        public static final int custom_blue_button=0x7f020005;
-        public static final int custom_dialog_border=0x7f020006;
-        public static final int custom_progress=0x7f020007;
-        public static final int devices=0x7f020008;
-        public static final int ic_launcher=0x7f020009;
-        public static final int premade_mods=0x7f02000a;
-        public static final int settings=0x7f02000b;
-        public static final int smart_house_bcg=0x7f02000c;
-        public static final int smart_house_bcg_pure=0x7f02000d;
-        public static final int sml=0x7f02000e;
-        public static final int warning=0x7f02000f;
+        public static final int aircondition=0x7f020001;
+        public static final int blinds=0x7f020002;
+        public static final int boiler=0x7f020003;
+        public static final int btn_default_disabled_focused_holo_light=0x7f020004;
+        public static final int btn_default_disabled_holo_light=0x7f020005;
+        public static final int btn_default_focused_holo_light=0x7f020006;
+        public static final int btn_default_pressed_holo_light=0x7f020007;
+        public static final int camera=0x7f020008;
+        public static final int custom_blue_button=0x7f020009;
+        public static final int custom_dialog_border=0x7f02000a;
+        public static final int custom_progress=0x7f02000b;
+        public static final int devices=0x7f02000c;
+        public static final int ic_launcher=0x7f02000d;
+        public static final int lightbuble_left=0x7f02000e;
+        public static final int lightbuble_right_off=0x7f02000f;
+        public static final int lightbuble_right_on=0x7f020010;
+        public static final int list_more=0x7f020011;
+        public static final int premade_mods=0x7f020012;
+        public static final int remote=0x7f020013;
+        public static final int settings=0x7f020014;
+        public static final int smart_house_bcg=0x7f020015;
+        public static final int smart_house_bcg_pure=0x7f020016;
+        public static final int sml=0x7f020017;
+        public static final int tv=0x7f020018;
+        public static final int warning=0x7f020019;
+        public static final int watch=0x7f02001a;
     }
     public static final class id {
-        public static final int action_forgot_password=0x7f0b001d;
-        public static final int action_settings=0x7f0b001c;
-        public static final int custom_toast_text=0x7f0b001b;
+        public static final int action_forgot_password=0x7f0b0021;
+        public static final int action_settings=0x7f0b0020;
+        public static final int custom_toast_text=0x7f0b001f;
         public static final int devices_button=0x7f0b0008;
         public static final int dialog_button_cancle=0x7f0b0019;
         public static final int dialog_button_ok=0x7f0b0018;
@@ -59,6 +70,10 @@ public final class R {
         public static final int email=0x7f0b000d;
         public static final int info_button=0x7f0b0003;
         public static final int info_text=0x7f0b0009;
+        public static final int label=0x7f0b001d;
+        public static final int list_icon_left=0x7f0b001a;
+        public static final int list_icon_right=0x7f0b001b;
+        public static final int list_text=0x7f0b001c;
         public static final int login=0x7f0b000f;
         public static final int login_form=0x7f0b000c;
         public static final int login_save_check=0x7f0b0011;
@@ -77,84 +92,87 @@ public final class R {
         public static final int textView3=0x7f0b0006;
         public static final int textView4=0x7f0b0002;
         public static final int titleDividerTop=0x7f0b0015;
-        public static final int toast_layout=0x7f0b001a;
+        public static final int toast_layout=0x7f0b001e;
     }
     public static final class layout {
         public static final int activity_home=0x7f030000;
         public static final int activity_info=0x7f030001;
         public static final int activity_login=0x7f030002;
-        public static final int activity_settings=0x7f030003;
-        public static final int activity_splash_screen=0x7f030004;
-        public static final int custom_dialog=0x7f030005;
-        public static final int custom_toast=0x7f030006;
+        public static final int activity_main_devices_list=0x7f030003;
+        public static final int activity_settings=0x7f030004;
+        public static final int activity_splash_screen=0x7f030005;
+        public static final int custom_dialog=0x7f030006;
+        public static final int custom_list_row=0x7f030007;
+        public static final int custom_toast=0x7f030008;
     }
     public static final class menu {
         public static final int home=0x7f0a0000;
         public static final int info=0x7f0a0001;
         public static final int login=0x7f0a0002;
-        public static final int settings=0x7f0a0003;
-        public static final int splash_screen=0x7f0a0004;
+        public static final int main_devices_list=0x7f0a0003;
+        public static final int settings=0x7f0a0004;
+        public static final int splash_screen=0x7f0a0005;
     }
     public static final class raw {
         public static final int button_click=0x7f050000;
     }
     public static final class string {
-        public static final int action_forgot_password=0x7f080016;
-        public static final int action_login_register=0x7f080014;
-        public static final int action_login_short=0x7f080015;
+        public static final int action_forgot_password=0x7f080017;
+        public static final int action_login_register=0x7f080015;
+        public static final int action_login_short=0x7f080016;
         public static final int action_settings=0x7f080001;
         public static final int app_name=0x7f080000;
-        public static final int copyright=0x7f08002b;
+        public static final int copyright=0x7f08002c;
         /**  Home menu 
          */
-        public static final int devices=0x7f080006;
+        public static final int devices=0x7f080007;
         /**  Home menu descritpions
          */
-        public static final int devices_desc=0x7f08000a;
-        public static final int dialog_button_cancle=0x7f080028;
-        public static final int dialog_button_ok=0x7f080027;
-        public static final int dialog_description_network=0x7f080026;
-        public static final int dialog_text_network=0x7f08002a;
-        public static final int dialog_title_network=0x7f080029;
-        public static final int error_field_required=0x7f08001b;
-        public static final int error_incorrect_password=0x7f08001a;
-        public static final int error_invalid_email=0x7f080018;
-        public static final int error_invalid_password=0x7f080019;
+        public static final int devices_desc=0x7f08000b;
+        public static final int dialog_button_cancle=0x7f080029;
+        public static final int dialog_button_ok=0x7f080028;
+        public static final int dialog_description_network=0x7f080027;
+        public static final int dialog_text_network=0x7f08002b;
+        public static final int dialog_title_network=0x7f08002a;
+        public static final int error_field_required=0x7f08001c;
+        public static final int error_incorrect_password=0x7f08001b;
+        public static final int error_invalid_email=0x7f080019;
+        public static final int error_invalid_password=0x7f08001a;
         public static final int hello_world=0x7f080002;
-        public static final int info=0x7f080007;
-        public static final int info_desc=0x7f08000b;
-        public static final int info_text=0x7f08000f;
-        public static final int login_progress_logging_in=0x7f080017;
-        public static final int premade_mods=0x7f080009;
-        public static final int premade_mods_desc=0x7f08000d;
-        public static final int premade_mods_toast_message=0x7f08000e;
+        public static final int info=0x7f080008;
+        public static final int info_desc=0x7f08000c;
+        public static final int info_text=0x7f080010;
+        public static final int login_progress_logging_in=0x7f080018;
+        public static final int premade_mods=0x7f08000a;
+        public static final int premade_mods_desc=0x7f08000e;
+        public static final int premade_mods_toast_message=0x7f08000f;
         /**  Strings related to login 
          */
-        public static final int prompt_email=0x7f080011;
-        public static final int prompt_password=0x7f080012;
-        public static final int save_email_and_pass=0x7f080013;
-        public static final int settings=0x7f080008;
-        public static final int settings_button_text=0x7f08001e;
-        public static final int settings_desc=0x7f08000c;
-        public static final int settings_dialog_text=0x7f08001f;
-        public static final int settings_dialog_title=0x7f080020;
-        public static final int settings_logout_toast_message=0x7f080021;
-        public static final int settings_sound_disabled_toast_message=0x7f080023;
-        public static final int settings_sound_enabled_toast_message=0x7f080022;
-        public static final int settings_sound_text=0x7f08001c;
-        public static final int settings_vibra_disabled_toast_message=0x7f080025;
-        public static final int settings_vibra_enabled_toast_message=0x7f080024;
-        public static final int settings_vibra_text=0x7f08001d;
+        public static final int prompt_email=0x7f080012;
+        public static final int prompt_password=0x7f080013;
+        public static final int save_email_and_pass=0x7f080014;
+        public static final int settings=0x7f080009;
+        public static final int settings_button_text=0x7f08001f;
+        public static final int settings_desc=0x7f08000d;
+        public static final int settings_dialog_text=0x7f080020;
+        public static final int settings_dialog_title=0x7f080021;
+        public static final int settings_logout_toast_message=0x7f080022;
+        public static final int settings_sound_disabled_toast_message=0x7f080024;
+        public static final int settings_sound_enabled_toast_message=0x7f080023;
+        public static final int settings_sound_text=0x7f08001d;
+        public static final int settings_vibra_disabled_toast_message=0x7f080026;
+        public static final int settings_vibra_enabled_toast_message=0x7f080025;
+        public static final int settings_vibra_text=0x7f08001e;
         public static final int title_activity_home=0x7f080003;
         public static final int title_activity_info=0x7f080004;
-        public static final int title_activity_login=0x7f080010;
+        public static final int title_activity_login=0x7f080011;
+        public static final int title_activity_main_devices_list=0x7f080006;
         public static final int title_activity_settings=0x7f080005;
     }
     public static final class style {
         /** 
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-
     
 
         Base application theme for API 11+. This theme completely replaces

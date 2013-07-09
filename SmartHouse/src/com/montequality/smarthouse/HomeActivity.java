@@ -80,6 +80,9 @@ public class HomeActivity extends Activity {
 				if(vibraSettings){
 					vibe.vibrate(80);
 				}
+				
+				Intent intent = new Intent(HomeActivity.this, MainDevicesListActivity.class);
+				startActivity(intent);
 			}
 		});
 
