@@ -1,0 +1,7 @@
+<resources>
+
+    <!-- Home menu -->
+    <string name="custom_list_image_left_description">Left image representing the device type</string>
+    <string name="custom_list_image_right_description">Right image representing the submeny or action</string>
+
+</resources>

@@ -14,36 +14,52 @@ public class CustomListAdapter extends ArrayAdapter<String> {
 
 	private final Context context;
 	private final String[] values;
-	private final int[] drawableIntLeft;
-	private final int[] drawableIntRight;
+	private int[] drawableIntLeft;
+	private int[] drawableIntRight;
 
-	public CustomListAdapter(Context context, String[] values, int[] drawableIntLeft, int[] drawableIntRight) {
+	public CustomListAdapter(Context context, String[] values,
+			int[] drawableIntLeft, int[] drawableIntRight) {
 		super(context, R.layout.custom_list_row, values);
 		this.context = context;
 		this.values = values;
-		this.drawableIntLeft = drawableIntLeft;
-		this.drawableIntRight = drawableIntRight;
+		this.setDrawableIntLeft(drawableIntLeft);
+		this.setDrawableIntRight(drawableIntRight);
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View rowView = inflater.inflate(R.layout.custom_list_row, parent, false);
+
+		LayoutInflater inflater = (LayoutInflater) context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View rowView = inflater
+				.inflate(R.layout.custom_list_row, parent, false);
 		TextView textView = (TextView) rowView.findViewById(R.id.list_text);
-		ImageView imageViewLeft = (ImageView) rowView.findViewById(R.id.list_icon_left);
-		ImageView imageViewRight = (ImageView) rowView.findViewById(R.id.list_icon_right);
+		ImageView imageViewLeft = (ImageView) rowView
+				.findViewById(R.id.list_icon_left);
+		ImageView imageViewRight = (ImageView) rowView
+				.findViewById(R.id.list_icon_right);
 		textView.setText(values[position]);
-		
-		if(values[position].equals("Lights")){
-			imageViewLeft.setImageResource(R.drawable.lightbuble_left);
-			imageViewRight.setImageResource(R.drawable.lightbuble_right_off);
-		}else{
-			imageViewLeft.setImageResource(drawableIntLeft[position]);
-			imageViewRight.setImageResource(drawableIntRight[position]);
-		}
-			
+
+		imageViewLeft.setImageResource(getDrawableIntLeft()[position]);
+		imageViewRight.setImageResource(getDrawableIntRight()[position]);
+
 		return rowView;
+	}
+
+	public int[] getDrawableIntLeft() {
+		return drawableIntLeft;
+	}
+
+	public void setDrawableIntLeft(int[] drawableIntLeft) {
+		this.drawableIntLeft = drawableIntLeft;
+	}
+
+	public int[] getDrawableIntRight() {
+		return drawableIntRight;
+	}
+
+	public void setDrawableIntRight(int[] drawableIntRight) {
+		this.drawableIntRight = drawableIntRight;
 	}
 
 }

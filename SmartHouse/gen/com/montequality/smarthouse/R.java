@@ -44,24 +44,26 @@ public final class R {
         public static final int custom_progress=0x7f02000b;
         public static final int devices=0x7f02000c;
         public static final int ic_launcher=0x7f02000d;
-        public static final int lightbuble_left=0x7f02000e;
-        public static final int lightbuble_right_off=0x7f02000f;
-        public static final int lightbuble_right_on=0x7f020010;
-        public static final int list_more=0x7f020011;
-        public static final int premade_mods=0x7f020012;
-        public static final int remote=0x7f020013;
-        public static final int settings=0x7f020014;
-        public static final int smart_house_bcg=0x7f020015;
-        public static final int smart_house_bcg_pure=0x7f020016;
-        public static final int sml=0x7f020017;
-        public static final int tv=0x7f020018;
-        public static final int warning=0x7f020019;
-        public static final int watch=0x7f02001a;
+        public static final int led_off=0x7f02000e;
+        public static final int led_on=0x7f02000f;
+        public static final int lightbuble_left=0x7f020010;
+        public static final int lightbuble_right_off=0x7f020011;
+        public static final int lightbuble_right_on=0x7f020012;
+        public static final int list_more=0x7f020013;
+        public static final int premade_mods=0x7f020014;
+        public static final int remote=0x7f020015;
+        public static final int settings=0x7f020016;
+        public static final int smart_house_bcg=0x7f020017;
+        public static final int smart_house_bcg_pure=0x7f020018;
+        public static final int sml=0x7f020019;
+        public static final int tv=0x7f02001a;
+        public static final int warning=0x7f02001b;
+        public static final int watch=0x7f02001c;
     }
     public static final class id {
-        public static final int action_forgot_password=0x7f0b0021;
-        public static final int action_settings=0x7f0b0020;
-        public static final int custom_toast_text=0x7f0b001f;
+        public static final int action_forgot_password=0x7f0b0020;
+        public static final int action_settings=0x7f0b001f;
+        public static final int custom_toast_text=0x7f0b001e;
         public static final int devices_button=0x7f0b0008;
         public static final int dialog_button_cancle=0x7f0b0019;
         public static final int dialog_button_ok=0x7f0b0018;
@@ -70,7 +72,6 @@ public final class R {
         public static final int email=0x7f0b000d;
         public static final int info_button=0x7f0b0003;
         public static final int info_text=0x7f0b0009;
-        public static final int label=0x7f0b001d;
         public static final int list_icon_left=0x7f0b001a;
         public static final int list_icon_right=0x7f0b001b;
         public static final int list_text=0x7f0b001c;
@@ -92,7 +93,7 @@ public final class R {
         public static final int textView3=0x7f0b0006;
         public static final int textView4=0x7f0b0002;
         public static final int titleDividerTop=0x7f0b0015;
-        public static final int toast_layout=0x7f0b001e;
+        public static final int toast_layout=0x7f0b001d;
     }
     public static final class layout {
         public static final int activity_home=0x7f030000;
@@ -122,7 +123,11 @@ public final class R {
         public static final int action_login_short=0x7f080016;
         public static final int action_settings=0x7f080001;
         public static final int app_name=0x7f080000;
-        public static final int copyright=0x7f08002c;
+        public static final int copyright=0x7f08002e;
+        /**  Home menu 
+         */
+        public static final int custom_list_image_left_description=0x7f08002c;
+        public static final int custom_list_image_right_description=0x7f08002d;
         /**  Home menu 
          */
         public static final int devices=0x7f080007;

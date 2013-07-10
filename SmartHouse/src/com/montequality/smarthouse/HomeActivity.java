@@ -29,24 +29,22 @@ public class HomeActivity extends Activity {
 	ImageButton premadeMods;
 	ImageButton info;
 	ImageButton settigs;
-	
+
 	SharedPreferences preferences;
 	SharedPreferences.Editor editor;
-	
+
 	boolean soundSettings;
 	boolean vibraSettings;
-	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
-		
+
 		preferences = getSharedPreferences("smartHouse_auth",
 				Context.MODE_PRIVATE);
 		editor = preferences.edit();
-		
-		
+
 		soundSettings = preferences.getBoolean("sound", true);
 		vibraSettings = preferences.getBoolean("vibra", true);
 
@@ -73,15 +71,16 @@ public class HomeActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				if(soundSettings){
+				if (soundSettings) {
 					fireSound();
 				}
-				
-				if(vibraSettings){
+
+				if (vibraSettings) {
 					vibe.vibrate(80);
 				}
-				
-				Intent intent = new Intent(HomeActivity.this, MainDevicesListActivity.class);
+
+				Intent intent = new Intent(HomeActivity.this,
+						MainDevicesListActivity.class);
 				startActivity(intent);
 			}
 		});
@@ -90,14 +89,14 @@ public class HomeActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				if(soundSettings){
+				if (soundSettings) {
 					fireSound();
 				}
-				
-				if(vibraSettings){
+
+				if (vibraSettings) {
 					vibe.vibrate(80);
 				}
-				
+
 				showToastMessage();
 
 			}
@@ -107,14 +106,15 @@ public class HomeActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				if(soundSettings){
+				if (soundSettings) {
 					fireSound();
 				}
-				
-				if(vibraSettings){
+
+				if (vibraSettings) {
 					vibe.vibrate(80);
 				}
-				Intent intent = new Intent(HomeActivity.this, InfoActivity.class);
+				Intent intent = new Intent(HomeActivity.this,
+						InfoActivity.class);
 				startActivity(intent);
 
 			}
@@ -124,21 +124,23 @@ public class HomeActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				if(soundSettings){
+				if (soundSettings) {
 					fireSound();
 				}
-				
-				if(vibraSettings){
+
+				if (vibraSettings) {
 					vibe.vibrate(80);
 				}
-				Intent intent = new Intent(HomeActivity.this, SettingsActivity.class);
+				Intent intent = new Intent(HomeActivity.this,
+						SettingsActivity.class);
 				startActivity(intent);
-				Log.d("PROBA HOME", "Sound = " + preferences.getBoolean("sound", true));
-				Log.d("PROBA HOME", "Vibra = " + preferences.getBoolean("vibra", true));
+				Log.d("PROBA HOME",
+						"Sound = " + preferences.getBoolean("sound", true));
+				Log.d("PROBA HOME",
+						"Vibra = " + preferences.getBoolean("vibra", true));
 			}
 		});
 
-		
 	}
 
 	@Override
@@ -165,10 +167,10 @@ public class HomeActivity extends Activity {
 	@Override
 	public void onBackPressed() {
 		finish();
-		super.onBackPressed();
-		
+		return;
+
 	}
-	
+
 	@Override
 	protected void onResume() {
 		soundSettings = preferences.getBoolean("sound", true);
@@ -176,7 +178,7 @@ public class HomeActivity extends Activity {
 		super.onResume();
 	}
 
-	private void showToastMessage(){
+	private void showToastMessage() {
 		LayoutInflater inflater = getLayoutInflater();
 		View layout = inflater.inflate(R.layout.custom_toast,
 				(ViewGroup) findViewById(R.id.toast_layout));
@@ -187,5 +189,5 @@ public class HomeActivity extends Activity {
 		toast.setView(layout);
 		toast.show();
 	}
-	
+
 }

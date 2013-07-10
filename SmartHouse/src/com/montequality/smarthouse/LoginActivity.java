@@ -104,6 +104,7 @@ public class LoginActivity extends Activity {
 		
 		if(preferences.contains("username") && preferences.contains("password")){
 			Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+			finish();
 			startActivity(intent);
 		}
 		
@@ -282,6 +283,7 @@ public class LoginActivity extends Activity {
 				
 				
 				Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+				finish();
 				startActivity(intent);
 			} else {
 				mPasswordView
