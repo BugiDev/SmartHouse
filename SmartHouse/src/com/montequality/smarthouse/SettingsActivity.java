@@ -5,8 +5,12 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
+import android.media.SoundPool;
+import android.media.SoundPool.OnLoadCompleteListener;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v4.app.NavUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,6 +27,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class SettingsActivity extends Activity {
+	
+	private SoundPool soundPool;
+	private int soundID;
+	boolean loaded = false;
+	Vibrator vibe;
+	
+	boolean soundSettings;
+	boolean vibraSettings;
 
 	SharedPreferences preferences;
 	SharedPreferences.Editor editor;
@@ -62,6 +74,23 @@ public class SettingsActivity extends Activity {
 		} else {
 			vibraCheck.setChecked(false);
 		}
+		
+		soundSettings = preferences.getBoolean("sound", true);
+		vibraSettings = preferences.getBoolean("vibra", true);
+		
+		vibe = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
+		this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
+		soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
+		soundPool.setOnLoadCompleteListener(new OnLoadCompleteListener() {
+			@Override
+			public void onLoadComplete(SoundPool soundPool, int sampleId,
+					int status) {
+				loaded = true;
+			}
+		});
+
+		soundID = soundPool.load(this, R.raw.button_click, 1);
 
 		soundCheck.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
@@ -191,6 +220,20 @@ public class SettingsActivity extends Activity {
 		toast.setDuration(Toast.LENGTH_SHORT);
 		toast.setView(layout);
 		toast.show();
+	}
+	
+	public void fireSound() {
+		// Getting the user sound settings
+		AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+		float actualVolume = (float) audioManager
+				.getStreamVolume(AudioManager.STREAM_MUSIC);
+		float maxVolume = (float) audioManager
+				.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+		float volume = actualVolume / maxVolume;
+		// Is the sound loaded already?
+		if (loaded) {
+			soundPool.play(soundID, volume, volume, 1, 0, 1f);
+		}
 	}
 
 }

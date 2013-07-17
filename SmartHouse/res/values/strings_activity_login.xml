@@ -3,16 +3,17 @@
     <string name="title_activity_login">Login</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
+    <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
-    <string name="save_email_and_pass">Save email \n and password?</string>
+    <string name="save_username_and_pass">Save username \n and password?</string>
     <string name="action_login_register">Login</string>
     <string name="action_login_short">Login</string>
     <string name="action_forgot_password">Recover lost password</string>
     <string name="login_progress_logging_in">Logging in&#8230;</string>
-    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_username">This username address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
+    <string name="error_username_or_password">Your username or password is incorrect</string>
 
 </resources>

@@ -1,5 +1,7 @@
 package com.montequality.smarthouse;
 
+import com.montequality.smarthouse.tasks.AuthenticateTask;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -7,9 +9,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
+import android.media.AudioManager;
+import android.media.SoundPool;
+import android.media.SoundPool.OnLoadCompleteListener;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -25,37 +30,34 @@ import android.widget.TextView;
  * well.
  */
 public class LoginActivity extends Activity {
-	/**
-	 * A dummy authentication store containing known user names and passwords.
-	 * TODO: remove after connecting to a real authentication system.
-	 */
-	private static final String[] DUMMY_CREDENTIALS = new String[] {
-			"foo@example.com:hello", "bar@example.com:world" };
 
-	/**
-	 * The default email to populate the email field with.
-	 */
-	public static final String EXTRA_EMAIL = "com.example.android.authenticatordemo.extra.EMAIL";
-
+	private SoundPool soundPool;
+	private int soundID;
+	boolean loaded = false;
+	Vibrator vibe;
+	
+	boolean soundSettings;
+	boolean vibraSettings;
+	
 	/**
 	 * Keep track of the login task to ensure we can cancel it if requested.
 	 */
-	private UserLoginTask mAuthTask = null;
+	public AuthenticateTask mAuthTask = null;
 
 	// Values for email and password at the time of the login attempt.
-	private String mEmail;
-	private String mPassword;
+	public String mUsername;
+	public String mPassword;
 
-	// UI references.
-	private EditText mEmailView;
-	private EditText mPasswordView;
-	private View mLoginFormView;
-	private View mLoginStatusView;
-	private TextView mLoginStatusMessageView;
-	private CheckBox saveCheck;
+	// UI references.e
+	public EditText mUsernameView;
+	public EditText mPasswordView;
+	public View mLoginFormView;
+	public View mLoginStatusView;
+	public TextView mLoginStatusMessageView;
+	public CheckBox saveCheck;
 	
-	SharedPreferences preferences;
-	SharedPreferences.Editor editor;
+	public SharedPreferences preferences;
+	public SharedPreferences.Editor editor;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,15 +66,29 @@ public class LoginActivity extends Activity {
 		setContentView(R.layout.activity_login);
 
 		// Set up the login form.
-		mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
-		mEmailView = (EditText) findViewById(R.id.email);
-		mEmailView.setText(mEmail);
+		mUsernameView = (EditText) findViewById(R.id.username);
+		mUsernameView.setText(mUsername);
 		
 		saveCheck = (CheckBox) findViewById(R.id.login_save_check);
 		preferences = getSharedPreferences("smartHouse_auth", Context.MODE_PRIVATE);
 		editor = preferences.edit();
 		
+		soundSettings = preferences.getBoolean("sound", true);
+		vibraSettings = preferences.getBoolean("vibra", true);
 		
+		vibe = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
+		this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
+		soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
+		soundPool.setOnLoadCompleteListener(new OnLoadCompleteListener() {
+			@Override
+			public void onLoadComplete(SoundPool soundPool, int sampleId,
+					int status) {
+				loaded = true;
+			}
+		});
+
+		soundID = soundPool.load(this, R.raw.button_click, 1);
 
 		mPasswordView = (EditText) findViewById(R.id.password);
 		mPasswordView
@@ -96,12 +112,17 @@ public class LoginActivity extends Activity {
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
+						if (soundSettings) {
+							fireSound();
+						}
+
+						if (vibraSettings) {
+							vibe.vibrate(80);
+						}
 						attemptLogin();
 					}
 				});
-		
-		
-		
+
 		if(preferences.contains("username") && preferences.contains("password")){
 			Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
 			finish();
@@ -146,11 +167,11 @@ public class LoginActivity extends Activity {
 		}
 
 		// Reset errors.
-		mEmailView.setError(null);
+		mUsernameView.setError(null);
 		mPasswordView.setError(null);
 
 		// Store values at the time of the login attempt.
-		mEmail = mEmailView.getText().toString();
+		mUsername = mUsernameView.getText().toString();
 		mPassword = mPasswordView.getText().toString();
 
 		boolean cancel = false;
@@ -168,13 +189,13 @@ public class LoginActivity extends Activity {
 		}
 
 		// Check for a valid email address.
-		if (TextUtils.isEmpty(mEmail)) {
-			mEmailView.setError(getString(R.string.error_field_required));
-			focusView = mEmailView;
+		if (TextUtils.isEmpty(mUsername)) {
+			mUsernameView.setError(getString(R.string.error_field_required));
+			focusView = mUsernameView;
 			cancel = true;
-		} else if (!mEmail.contains("@")) {
-			mEmailView.setError(getString(R.string.error_invalid_email));
-			focusView = mEmailView;
+		} else if (mUsername.length() < 4) {
+			mUsernameView.setError(getString(R.string.error_invalid_username));
+			focusView = mUsernameView;
 			cancel = true;
 		}
 
@@ -187,7 +208,7 @@ public class LoginActivity extends Activity {
 			// perform the user login attempt.
 			mLoginStatusMessageView.setText(R.string.login_progress_logging_in);
 			showProgress(true);
-			mAuthTask = new UserLoginTask();
+			mAuthTask = new AuthenticateTask(this);
 			mAuthTask.execute((Void) null);
 		}
 	}
@@ -196,7 +217,7 @@ public class LoginActivity extends Activity {
 	 * Shows the progress UI and hides the login form.
 	 */
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-	private void showProgress(final boolean show) {
+	public void showProgress(final boolean show) {
 		// On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
 		// for very easy animations. If available, use these APIs to fade-in
 		// the progress spinner.
@@ -238,64 +259,19 @@ public class LoginActivity extends Activity {
 		super.onBackPressed();
 		finish();
 	}
-
-	/**
-	 * Represents an asynchronous login/registration task used to authenticate
-	 * the user.
-	 */
-	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-		@Override
-		protected Boolean doInBackground(Void... params) {
-			// TODO: attempt authentication against a network service.
-
-			try {
-				// Simulate network access.
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
-				return false;
-			}
-
-			for (String credential : DUMMY_CREDENTIALS) {
-				String[] pieces = credential.split(":");
-				if (pieces[0].equals(mEmail)) {
-					// Account exists, return true if the password matches.
-					return pieces[1].equals(mPassword);
-				}
-			}
-
-			// TODO: register the new account here.
-			return true;
-		}
-
-		@Override
-		protected void onPostExecute(final Boolean success) {
-			mAuthTask = null;
-			showProgress(false);
-
-			if (success) {
-				
-				
-				if(saveCheck.isChecked()){
-					editor.putString("username", mEmailView.getText().toString());
-					editor.putString("password", mPasswordView.getText().toString());
-					editor.commit();
-				}
-				
-				
-				Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-				finish();
-				startActivity(intent);
-			} else {
-				mPasswordView
-						.setError(getString(R.string.error_incorrect_password));
-				mPasswordView.requestFocus();
-			}
-		}
-
-		@Override
-		protected void onCancelled() {
-			mAuthTask = null;
-			showProgress(false);
+	
+	public void fireSound() {
+		// Getting the user sound settings
+		AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+		float actualVolume = (float) audioManager
+				.getStreamVolume(AudioManager.STREAM_MUSIC);
+		float maxVolume = (float) audioManager
+				.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+		float volume = actualVolume / maxVolume;
+		// Is the sound loaded already?
+		if (loaded) {
+			soundPool.play(soundID, volume, volume, 1, 0, 1f);
 		}
 	}
+	
 }
