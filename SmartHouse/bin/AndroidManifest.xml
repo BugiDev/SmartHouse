@@ -63,6 +63,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.montequality.smarthouse.HomeActivity" />
         </activity>
+        <activity
+            android:name="com.montequality.smarthouse.LightsList"
+            android:label="@string/title_activity_lights_list"
+            android:parentActivityName="com.montequality.smarthouse.MainDevicesListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.montequality.smarthouse.MainDevicesListActivity" />
+        </activity>
     </application>
 
 </manifest>

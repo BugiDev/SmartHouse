@@ -1,0 +1,7 @@
+<resources>
+
+    <!-- Home menu -->
+    <string name="light_on">Light turned on in room </string>
+    <string name="light_off">Light turned off in room </string>
+    <string name="light_error">There was an error turning the light in room </string>
+</resources>

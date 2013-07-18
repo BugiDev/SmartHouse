@@ -8,7 +8,43 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".HomeActivity" >
+    
+    
+    <LinearLayout
+        android:id="@+id/home_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/smart_house_bcg_pure"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="gone" >
 
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/custom_progress" />
+
+        <TextView
+            android:id="@+id/home_status_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="sans-serif-light"
+            android:text="@string/loading_devices"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/blue"
+            android:textColorHighlight="@color/blue"
+            android:textColorHint="@color/blue" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/home_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+    
     <RelativeLayout
         android:id="@+id/relativeLayout1"
         android:layout_width="20dp"
@@ -94,5 +130,5 @@
         android:layout_toLeftOf="@+id/relativeLayout1"
         android:src="@drawable/devices"
         android:contentDescription="@string/devices_desc" />
-
+</RelativeLayout>
 </RelativeLayout>

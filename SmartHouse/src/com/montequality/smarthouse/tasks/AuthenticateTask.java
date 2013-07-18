@@ -28,7 +28,6 @@ import com.montequality.smarthouse.util.PropertyReader;
 
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.util.Log;
 
 public class AuthenticateTask extends AsyncTask<Void, Boolean, Boolean> {
 
@@ -58,7 +57,6 @@ public class AuthenticateTask extends AsyncTask<Void, Boolean, Boolean> {
 			
 			HttpClient httpclient = new DefaultHttpClient();
 			HttpPost httppost = new HttpPost(uri);
-			// Log.d("response", "WORKING");
 
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 			nameValuePairs.add(new BasicNameValuePair("username", username));
@@ -86,8 +84,7 @@ public class AuthenticateTask extends AsyncTask<Void, Boolean, Boolean> {
 		        }
 		        buf.close();
 		        ips.close();
-		        activity.editor.putString("id", sb.toString());
-		        Log.d("respones", "json response is:" + sb.toString());
+		        activity.editor.putString("userID", sb.toString());
 	        }
 	        
 			

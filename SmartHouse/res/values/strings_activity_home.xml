@@ -13,4 +13,6 @@
     <string name="premade_mods_desc">Premade \n mods button</string>
     
     <string name="premade_mods_toast_message">This page is in construction.</string>
+    
+    <string name="loading_devices">Devices loading&#8230;</string>
 </resources>

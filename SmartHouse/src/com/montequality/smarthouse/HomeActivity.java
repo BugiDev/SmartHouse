@@ -1,23 +1,25 @@
 package com.montequality.smarthouse;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.media.SoundPool.OnLoadCompleteListener;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.montequality.smarthouse.tasks.GetDevicesTask;
 
 public class HomeActivity extends Activity {
 
@@ -30,12 +32,18 @@ public class HomeActivity extends Activity {
 	ImageButton info;
 	ImageButton settigs;
 
-	SharedPreferences preferences;
-	SharedPreferences.Editor editor;
+	public SharedPreferences preferences;
+	public SharedPreferences.Editor editor;
 
 	boolean soundSettings;
 	boolean vibraSettings;
 
+	public View mHomeView;
+	public View mHomeStatusView;
+	public TextView mHomeStatusMessageView;
+	
+	GetDevicesTask mTestTask;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -67,6 +75,10 @@ public class HomeActivity extends Activity {
 
 		soundID = soundPool.load(this, R.raw.button_click, 1);
 
+		mHomeView = findViewById(R.id.home_layout);
+		mHomeStatusView = findViewById(R.id.home_status);
+		mHomeStatusMessageView = (TextView) findViewById(R.id.home_status_message);
+		
 		devices.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -79,9 +91,10 @@ public class HomeActivity extends Activity {
 					vibe.vibrate(80);
 				}
 
-				Intent intent = new Intent(HomeActivity.this,
-						MainDevicesListActivity.class);
-				startActivity(intent);
+				mTestTask = new GetDevicesTask(HomeActivity.this);
+				mTestTask.execute((Void) null);
+
+				
 			}
 		});
 

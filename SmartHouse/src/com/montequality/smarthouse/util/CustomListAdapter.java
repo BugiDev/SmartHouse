@@ -1,5 +1,7 @@
 package com.montequality.smarthouse.util;
 
+import java.util.List;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +15,12 @@ import com.montequality.smarthouse.R;
 public class CustomListAdapter extends ArrayAdapter<String> {
 
 	private final Context context;
-	private final String[] values;
-	private int[] drawableIntLeft;
-	private int[] drawableIntRight;
+	private final List<String> values;
+	private List<Integer> drawableIntLeft;
+	private List<Integer> drawableIntRight;
 
-	public CustomListAdapter(Context context, String[] values,
-			int[] drawableIntLeft, int[] drawableIntRight) {
+	public CustomListAdapter(Context context, List<String> values,
+			 List<Integer> drawableIntLeft,  List<Integer> drawableIntRight) {
 		super(context, R.layout.custom_list_row, values);
 		this.context = context;
 		this.values = values;
@@ -38,27 +40,27 @@ public class CustomListAdapter extends ArrayAdapter<String> {
 				.findViewById(R.id.list_icon_left);
 		ImageView imageViewRight = (ImageView) rowView
 				.findViewById(R.id.list_icon_right);
-		textView.setText(values[position]);
+		textView.setText(values.get(position));
 
-		imageViewLeft.setImageResource(getDrawableIntLeft()[position]);
-		imageViewRight.setImageResource(getDrawableIntRight()[position]);
+		imageViewLeft.setImageResource(getDrawableIntLeft().get(position));
+		imageViewRight.setImageResource(getDrawableIntRight().get(position));
 
 		return rowView;
 	}
 
-	public int[] getDrawableIntLeft() {
+	public  List<Integer> getDrawableIntLeft() {
 		return drawableIntLeft;
 	}
 
-	public void setDrawableIntLeft(int[] drawableIntLeft) {
+	public void setDrawableIntLeft( List<Integer> drawableIntLeft) {
 		this.drawableIntLeft = drawableIntLeft;
 	}
 
-	public int[] getDrawableIntRight() {
+	public  List<Integer> getDrawableIntRight() {
 		return drawableIntRight;
 	}
 
-	public void setDrawableIntRight(int[] drawableIntRight) {
+	public void setDrawableIntRight( List<Integer> drawableIntRight) {
 		this.drawableIntRight = drawableIntRight;
 	}
 
