@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.montequality.smarthouse.R;
+import com.montequality.smarthouse.util.CustomListAdapter;
 import com.montequality.smarthouse.util.PropertyReader;
 
 public class OnOffTask extends AsyncTask<Void, Void, String> {
@@ -39,18 +40,23 @@ public class OnOffTask extends AsyncTask<Void, Void, String> {
 	private int deviceID;
 	private String deviceType;
 	private String room;
-	
+	private CustomListAdapter adapter;
+	private int positionInList;
+
 	public OnOffTask() {
 		// TODO Auto-generated constructor stub
 	}
-	
-	public OnOffTask(Activity activity, int deviceID, String deviceType, String room) {
+
+	public OnOffTask(Activity activity, int deviceID, String deviceType,
+			String room, CustomListAdapter adapter, int positionInList) {
 		this.activity = activity;
 		this.deviceID = deviceID;
 		this.deviceType = deviceType;
 		this.room = room;
+		this.adapter = adapter;
+		this.positionInList = positionInList;
 	}
-	
+
 	@Override
 	protected String doInBackground(Void... arg0) {
 		try {
@@ -70,7 +76,8 @@ public class OnOffTask extends AsyncTask<Void, Void, String> {
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 			nameValuePairs.add(new BasicNameValuePair("deviceID", Integer
 					.toString(deviceID)));
-			nameValuePairs.add(new BasicNameValuePair("deviceType", deviceType));
+			nameValuePairs
+					.add(new BasicNameValuePair("deviceType", deviceType));
 
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 			HttpResponse response = httpclient.execute(httppost);
@@ -93,7 +100,8 @@ public class OnOffTask extends AsyncTask<Void, Void, String> {
 				}
 				buf.close();
 				ips.close();
-				Log.d("++++++++++++++++++++ONOFF++++++++++++++++++", sb.toString());
+				Log.d("++++++++++++++++++++ONOFF++++++++++++++++++", deviceType
+						+ " in " + room + " " + sb.toString());
 				return sb.toString();
 			}
 		} // TODO: register the new account here.
@@ -118,23 +126,23 @@ public class OnOffTask extends AsyncTask<Void, Void, String> {
 			e.printStackTrace();
 			return "sranje";
 		}
-		
-		
+
 	}
-	
+
 	@Override
 	protected void onPostExecute(String params) {
-		
-		String message;
-		
-		if(params.equalsIgnoreCase("true")){
-			message = activity.getResources().getString(R.string.light_on).concat(room);
-		}else if(params.equalsIgnoreCase("false")){
-			message = activity.getResources().getString(R.string.light_off).concat(room);
-		}else{
-			message = activity.getResources().getString(R.string.light_error).concat(room);
+
+		if (deviceType.equalsIgnoreCase("Light")) {
+			changeLight(params);
+		} else if (deviceType.equalsIgnoreCase("Boiler")) {
+			changeBoiler(params);
 		}
 
+		adapter.notifyDataSetChanged();
+
+	}
+
+	private void showToastMessage(String message) {
 		LayoutInflater inflater = activity.getLayoutInflater();
 		View layout = inflater.inflate(R.layout.custom_toast,
 				(ViewGroup) activity.findViewById(R.id.toast_layout));
@@ -144,7 +152,73 @@ public class OnOffTask extends AsyncTask<Void, Void, String> {
 		toast.setDuration(Toast.LENGTH_SHORT);
 		toast.setView(layout);
 		toast.show();
+	}
 
+	private void changeLight(String params) {
+
+		String message;
+		List<Integer> tempDrawRight = adapter.getDrawableIntRight();
+
+		if (params.equalsIgnoreCase("true")) {
+			message = activity.getResources().getString(R.string.light_on)
+					.concat(room);
+
+		} else if (params.equalsIgnoreCase("false")) {
+			message = activity.getResources().getString(R.string.light_off)
+					.concat(room);
+		} else {
+			message = activity.getResources().getString(R.string.light_error)
+					.concat(room);
+		}
+
+		if (tempDrawRight.get(positionInList).equals(
+				R.drawable.lightbuble_right_on)) {
+
+			tempDrawRight.set(positionInList, R.drawable.lightbuble_right_off);
+			adapter.setDrawableIntRight(tempDrawRight);
+
+		} else {
+
+			tempDrawRight.set(positionInList, R.drawable.lightbuble_right_on);
+			adapter.setDrawableIntRight(tempDrawRight);
+
+		}
+
+		showToastMessage(message);
+
+	}
+
+	private void changeBoiler(String params) {
+
+		String message;
+		List<Integer> tempDrawRight = adapter.getDrawableIntRight();
+
+		if (params.equalsIgnoreCase("true")) {
+			message = activity.getResources().getString(R.string.light_on)
+					.concat(room);
+
+		} else if (params.equalsIgnoreCase("false")) {
+			message = activity.getResources().getString(R.string.light_off)
+					.concat(room);
+		} else {
+			message = activity.getResources().getString(R.string.light_error)
+					.concat(room);
+		}
+
+		if (tempDrawRight.get(positionInList).equals(
+				R.drawable.led_on)) {
+
+			tempDrawRight.set(positionInList, R.drawable.led_off);
+			adapter.setDrawableIntRight(tempDrawRight);
+
+		} else {
+
+			tempDrawRight.set(positionInList, R.drawable.led_on);
+			adapter.setDrawableIntRight(tempDrawRight);
+
+		}
+
+		showToastMessage(message);
 	}
 
 }

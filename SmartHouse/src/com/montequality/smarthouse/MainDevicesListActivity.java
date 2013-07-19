@@ -23,22 +23,22 @@ import android.widget.Toast;
 import com.montequality.smarthouse.entity.Boiler;
 import com.montequality.smarthouse.entity.Light;
 import com.montequality.smarthouse.entity.Temperature;
+import com.montequality.smarthouse.tasks.OnOffTask;
 import com.montequality.smarthouse.util.CustomListAdapter;
 
 public class MainDevicesListActivity extends ListActivity {
-
-	boolean svetlo = false;
-	boolean boiler = false;
 
 	CustomListAdapter adapter;
 
 	SharedPreferences preferences;
 	SharedPreferences.Editor editor;
+	
+	OnOffTask onOffTask;
 
 	List<Light> lightList = new ArrayList<Light>();
 	List<Boiler> boilerList = new ArrayList<Boiler>();
 	List<Temperature> temperatureList = new ArrayList<Temperature>();
-	
+
 	List<String> allDevices = new ArrayList<String>();
 	List<Integer> drawableLeft = new ArrayList<Integer>();
 	List<Integer> drawableRight = new ArrayList<Integer>();
@@ -47,38 +47,8 @@ public class MainDevicesListActivity extends ListActivity {
 		super.onCreate(icicle);
 
 		getDevicesFromJSON();
-		
-		allDevices.add("Lights");
-		allDevices.add("TV");
-		allDevices.add("Boiler");
-		allDevices.add("Aircondition");
-		allDevices.add("Window blinds");
-		allDevices.add("Cameras");
-		
-		drawableLeft.add(R.drawable.lightbuble_left);
-		drawableLeft.add(R.drawable.tv);
-		drawableLeft.add(R.drawable.boiler);
-		drawableLeft.add(R.drawable.aircondition);
-		drawableLeft.add(R.drawable.blinds);
-		drawableLeft.add(R.drawable.camera);
-		
-		drawableRight.add(R.drawable.list_more);
-		drawableRight.add(R.drawable.remote);
-		drawableRight.add(R.drawable.led_off);
-		drawableRight.add(R.drawable.remote);
-		drawableRight.add(R.drawable.list_more);
-		drawableRight.add(R.drawable.watch);
-		
-		adapter = new CustomListAdapter(this, allDevices, drawableLeft,
-				drawableRight);
-		setListAdapter(adapter);
 
-		ListView list = getListView();
-		ColorDrawable blue = new ColorDrawable(this.getResources().getColor(
-				R.color.blue));
-		list.setDivider(blue);
-		list.setDividerHeight(1);
-		list.setBackgroundColor(getResources().getColor(R.color.grey));
+		initializeList();
 
 		preferences = getSharedPreferences("smartHouse_auth",
 				Context.MODE_PRIVATE);
@@ -91,34 +61,30 @@ public class MainDevicesListActivity extends ListActivity {
 
 		String item = (String) getListAdapter().getItem(position);
 
-		List<Integer> tempDrawRight = adapter.getDrawableIntRight();
-
-		switch (position) {
-		case 0: {
-			Intent intent = new Intent(this, LightsList.class);
-			intent.putExtra("jsonDevices", getIntent().getStringExtra("jsonDevices"));
-			startActivity(intent);
-			break;
-		}
-		case 2: {
-			if (boiler) {
-				tempDrawRight.set(2, R.drawable.led_off);
-				adapter.setDrawableIntRight(tempDrawRight);
-				showToastMessage(item + " off");
-				boiler = false;
-			} else {
-				tempDrawRight.set(2, R.drawable.led_on);
-				adapter.setDrawableIntRight(tempDrawRight);
-				showToastMessage(item + " on");
-				boiler = true;
+		if(item.equalsIgnoreCase("Lights")){
+			if (lightList.size() > 1) {
+				Intent intent = new Intent(this, LightsList.class);
+				intent.putExtra("jsonDevices",
+						getIntent().getStringExtra("jsonDevices"));
+				startActivity(intent);
+			} else if (lightList.size() == 1) {
+				onOffTask = new OnOffTask(this, lightList.get(0).getId(),
+						"Light", lightList.get(0).getRoom(), adapter, position);
+				onOffTask.execute((Void) null);
 			}
-			break;
-		}
-		default:
-			showToastMessage(item + " selected");
-			break;
-		}
 
+		}else if(item.equalsIgnoreCase("Boiler")){
+			if (boilerList.size() > 1) {
+				// TODO Auto-generated catch block
+			} else if (boilerList.size() == 1) {
+				onOffTask = new OnOffTask(this, boilerList.get(0).getId(),
+						"Boiler", boilerList.get(0).getRoom(), adapter, position);
+				onOffTask.execute((Void) null);
+			}
+		}else{
+			showToastMessage(item + " clicked");
+		}
+		
 		adapter.notifyDataSetChanged();
 
 	}
@@ -140,7 +106,6 @@ public class MainDevicesListActivity extends ListActivity {
 		JSONObject jsonObj = null;
 		JSONArray jArray = null;
 
-
 		try {
 
 			jsonObj = new JSONObject(getIntent().getStringExtra("jsonDevices"));
@@ -151,14 +116,13 @@ public class MainDevicesListActivity extends ListActivity {
 				JSONObject json_data;
 
 				json_data = jArray.getJSONObject(i);
-				Light light_single = new Light(
-						json_data.getInt("id"),
+				Light light_single = new Light(json_data.getInt("id"),
 						json_data.getBoolean("power"),
 						json_data.getString("room"));
-				
+
 				lightList.add(light_single);
 			}
-			
+
 			jArray = jsonObj.getJSONArray("boilerList");
 
 			for (int i = 0; i < jArray.length(); i++) {
@@ -166,15 +130,13 @@ public class MainDevicesListActivity extends ListActivity {
 				JSONObject json_data;
 
 				json_data = jArray.getJSONObject(i);
-				Boiler boiler_single = new Boiler(
-						json_data.getInt("id"),
+				Boiler boiler_single = new Boiler(json_data.getInt("id"),
 						json_data.getBoolean("power"),
 						json_data.getString("room"));
-				
+
 				boilerList.add(boiler_single);
 			}
 
-			
 			jArray = jsonObj.getJSONArray("temperatureList");
 
 			for (int i = 0; i < jArray.length(); i++) {
@@ -186,15 +148,74 @@ public class MainDevicesListActivity extends ListActivity {
 						json_data.getInt("id"),
 						json_data.getInt("temperature"),
 						json_data.getString("room"));
-				
+
 				temperatureList.add(light_single);
 			}
-
 
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+	}
+
+	public void initializeList() {
+
+		if (lightList.size() > 1) {
+			drawableRight.add(R.drawable.list_more);
+			allDevices.add("Lights");
+			drawableLeft.add(R.drawable.lightbuble_left);
+		} else if (lightList.size() == 1) {
+			allDevices.add("Lights");
+			drawableLeft.add(R.drawable.lightbuble_left);
+			if (lightList.get(0).isPower()) {
+				drawableRight.add(R.drawable.lightbuble_right_on);
+			} else {
+				drawableRight.add(R.drawable.lightbuble_right_off);
+			}
+		}
+
+
+		if (boilerList.size() > 1) {
+			drawableRight.add(R.drawable.list_more);
+			allDevices.add("Boiler");
+			drawableLeft.add(R.drawable.boiler);
+		} else if (boilerList.size() == 1) {
+			allDevices.add("Boiler");
+			drawableLeft.add(R.drawable.boiler);
+			if (boilerList.get(0).isPower()) {
+				drawableRight.add(R.drawable.led_on);
+			} else {
+				drawableRight.add(R.drawable.led_off);
+			}
+		}
+		
+		drawableLeft.add(R.drawable.tv);
+		allDevices.add("TV");
+		drawableRight.add(R.drawable.remote);
+
+		allDevices.add("Aircondition");
+		drawableLeft.add(R.drawable.aircondition);
+		drawableRight.add(R.drawable.remote);
+
+		allDevices.add("Window blinds");
+		drawableLeft.add(R.drawable.blinds);
+		drawableRight.add(R.drawable.list_more);
+
+		allDevices.add("Cameras");
+		drawableLeft.add(R.drawable.camera);
+		drawableRight.add(R.drawable.watch);
+
+		adapter = new CustomListAdapter(this, allDevices, drawableLeft,
+				drawableRight);
+		setListAdapter(adapter);
+
+		ListView list = getListView();
+		ColorDrawable blue = new ColorDrawable(this.getResources().getColor(
+				R.color.blue));
+		list.setDivider(blue);
+		list.setDividerHeight(1);
+		list.setBackgroundColor(getResources().getColor(R.color.grey));
 
 	}
 

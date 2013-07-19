@@ -7,28 +7,25 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.montequality.smarthouse.entity.Light;
-import com.montequality.smarthouse.util.CustomListAdapter;
-
-import android.os.Bundle;
-import android.app.ListActivity;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 import android.annotation.TargetApi;
+import android.app.ListActivity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ListView;
 
-public class LightsList extends ListActivity{
-	
-	CustomListAdapter adapter;
+import com.montequality.smarthouse.entity.Light;
+import com.montequality.smarthouse.tasks.OnOffTask;
+import com.montequality.smarthouse.util.CustomListAdapter;
+
+public class LightsList extends ListActivity {
+
+	public CustomListAdapter adapter;
 
 	SharedPreferences preferences;
 	SharedPreferences.Editor editor;
@@ -37,22 +34,27 @@ public class LightsList extends ListActivity{
 	List<Integer> drawableLeft = new ArrayList<Integer>();
 	List<Integer> drawableRight = new ArrayList<Integer>();
 
+	OnOffTask onOffTask;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// Show the Up button in the action bar.
 		setupActionBar();
-		
-		if(getIntent().getStringExtra("jsonDevices") != null){
-		getDevicesFromJSON();
+
+		if (getIntent().getStringExtra("jsonDevices") != null) {
+			getDevicesFromJSON();
 		}
-		
+
 		List<String> lightsString = new ArrayList<String>();
 		for (int i = 0; i < lightList.size(); i++) {
 			lightsString.add(lightList.get(i).getRoom());
 			drawableLeft.add(R.drawable.lightbuble_left);
-			drawableRight.add(R.drawable.lightbuble_right_off);
-			
+			if (lightList.get(i).isPower()) {
+				drawableRight.add(R.drawable.lightbuble_right_on);
+			} else {
+				drawableRight.add(R.drawable.lightbuble_right_off);
+			}
 		}
 
 		adapter = new CustomListAdapter(this, lightsString, drawableLeft,
@@ -104,41 +106,14 @@ public class LightsList extends ListActivity{
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 
-		String item = (String) getListAdapter().getItem(position);
+		onOffTask = new OnOffTask(this, lightList.get(position).getId(),
+				"Light", lightList.get(position).getRoom(), adapter, position);
+		onOffTask.execute((Void) null);
 
-		List<Integer> tempDrawRight = adapter.getDrawableIntRight();
-
-
-			if (tempDrawRight.get(position).equals(R.drawable.lightbuble_right_on)) {
-				tempDrawRight.set(position, R.drawable.lightbuble_right_off);
-				adapter.setDrawableIntRight(tempDrawRight);
-				showToastMessage(item + " off");
-
-			} else {
-				tempDrawRight.set(position, R.drawable.lightbuble_right_on);
-				adapter.setDrawableIntRight(tempDrawRight);
-				showToastMessage(item + " on");
-
-			}
-
-		adapter.notifyDataSetChanged();
-
-	}
-
-	private void showToastMessage(String message) {
-		LayoutInflater inflater = getLayoutInflater();
-		View layout = inflater.inflate(R.layout.custom_toast,
-				(ViewGroup) findViewById(R.id.toast_layout));
-		((TextView) layout.findViewById(R.id.custom_toast_text))
-				.setText(message);
-		Toast toast = new Toast(getBaseContext());
-		toast.setDuration(Toast.LENGTH_SHORT);
-		toast.setView(layout);
-		toast.show();
 	}
 
 	private void getDevicesFromJSON() {
@@ -156,11 +131,12 @@ public class LightsList extends ListActivity{
 				JSONObject json_data;
 
 				json_data = jArray.getJSONObject(i);
+				
 				Light light_single = new Light(
 						json_data.getInt("id"),
 						json_data.getBoolean("power"),
 						json_data.getString("room"));
-				
+
 				lightList.add(light_single);
 			}
 

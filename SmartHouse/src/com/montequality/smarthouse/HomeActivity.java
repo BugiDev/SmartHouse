@@ -94,7 +94,6 @@ public class HomeActivity extends Activity {
 				mTestTask = new GetDevicesTask(HomeActivity.this);
 				mTestTask.execute((Void) null);
 
-				
 			}
 		});
 
