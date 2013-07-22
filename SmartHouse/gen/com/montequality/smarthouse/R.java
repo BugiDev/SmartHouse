@@ -61,10 +61,11 @@ public final class R {
         public static final int watch=0x7f02001c;
     }
     public static final class id {
-        public static final int action_forgot_password=0x7f0b0023;
-        public static final int action_settings=0x7f0b0022;
-        public static final int custom_toast_text=0x7f0b0021;
+        public static final int action_forgot_password=0x7f0b0025;
+        public static final int action_settings=0x7f0b0024;
+        public static final int custom_toast_text=0x7f0b0023;
         public static final int devices_button=0x7f0b000b;
+        public static final int dialog_action_text=0x7f0b001e;
         public static final int dialog_button_cancle=0x7f0b001c;
         public static final int dialog_button_ok=0x7f0b001b;
         public static final int dialog_image=0x7f0b0019;
@@ -74,9 +75,9 @@ public final class R {
         public static final int home_status_message=0x7f0b0001;
         public static final int info_button=0x7f0b0006;
         public static final int info_text=0x7f0b000c;
-        public static final int list_icon_left=0x7f0b001d;
-        public static final int list_icon_right=0x7f0b001e;
-        public static final int list_text=0x7f0b001f;
+        public static final int list_icon_left=0x7f0b001f;
+        public static final int list_icon_right=0x7f0b0020;
+        public static final int list_text=0x7f0b0021;
         public static final int login=0x7f0b0012;
         public static final int login_form=0x7f0b000f;
         public static final int login_save_check=0x7f0b0014;
@@ -84,6 +85,7 @@ public final class R {
         public static final int login_status_message=0x7f0b000e;
         public static final int password=0x7f0b0011;
         public static final int premade_mods_button=0x7f0b000a;
+        public static final int progressBar1=0x7f0b001d;
         public static final int relativeLayout1=0x7f0b0003;
         public static final int settings_button=0x7f0b0007;
         public static final int settings_button_logout=0x7f0b0017;
@@ -95,7 +97,7 @@ public final class R {
         public static final int textView3=0x7f0b0009;
         public static final int textView4=0x7f0b0005;
         public static final int titleDividerTop=0x7f0b0018;
-        public static final int toast_layout=0x7f0b0020;
+        public static final int toast_layout=0x7f0b0022;
         public static final int username=0x7f0b0010;
     }
     public static final class layout {
@@ -107,8 +109,9 @@ public final class R {
         public static final int activity_settings=0x7f030005;
         public static final int activity_splash_screen=0x7f030006;
         public static final int custom_dialog=0x7f030007;
-        public static final int custom_list_row=0x7f030008;
-        public static final int custom_toast=0x7f030009;
+        public static final int custom_dialog_action=0x7f030008;
+        public static final int custom_list_row=0x7f030009;
+        public static final int custom_toast=0x7f03000a;
     }
     public static final class menu {
         public static final int home=0x7f0a0000;
@@ -123,67 +126,69 @@ public final class R {
         public static final int button_click=0x7f050000;
     }
     public static final class string {
-        public static final int action_forgot_password=0x7f08001c;
-        public static final int action_login_register=0x7f08001a;
-        public static final int action_login_short=0x7f08001b;
+        public static final int action_forgot_password=0x7f08001e;
+        public static final int action_login_register=0x7f08001c;
+        public static final int action_login_short=0x7f08001d;
         public static final int action_settings=0x7f080001;
         public static final int app_name=0x7f080000;
-        public static final int copyright=0x7f080034;
+        public static final int copyright=0x7f080036;
         /**  Home menu 
          */
-        public static final int custom_list_image_left_description=0x7f080032;
-        public static final int custom_list_image_right_description=0x7f080033;
+        public static final int custom_list_image_left_description=0x7f080034;
+        public static final int custom_list_image_right_description=0x7f080035;
         /**  Home menu 
          */
-        public static final int devices=0x7f080008;
+        public static final int devices=0x7f08000a;
         /**  Home menu descritpions
          */
-        public static final int devices_desc=0x7f08000c;
-        public static final int dialog_button_cancle=0x7f08002f;
-        public static final int dialog_button_ok=0x7f08002e;
-        public static final int dialog_description_network=0x7f08002d;
-        public static final int dialog_text_network=0x7f080031;
-        public static final int dialog_title_network=0x7f080030;
-        public static final int error_field_required=0x7f080021;
-        public static final int error_incorrect_password=0x7f080020;
-        public static final int error_invalid_password=0x7f08001f;
-        public static final int error_invalid_username=0x7f08001e;
-        public static final int error_username_or_password=0x7f080022;
+        public static final int devices_desc=0x7f08000e;
+        public static final int dialog_button_cancle=0x7f080031;
+        public static final int dialog_button_ok=0x7f080030;
+        public static final int dialog_description_network=0x7f08002f;
+        public static final int dialog_text_network=0x7f080033;
+        public static final int dialog_title_network=0x7f080032;
+        public static final int error_field_required=0x7f080023;
+        public static final int error_incorrect_password=0x7f080022;
+        public static final int error_invalid_password=0x7f080021;
+        public static final int error_invalid_username=0x7f080020;
+        public static final int error_username_or_password=0x7f080024;
         public static final int hello_world=0x7f080002;
-        public static final int info=0x7f080009;
-        public static final int info_desc=0x7f08000d;
-        public static final int info_text=0x7f080012;
-        public static final int light_error=0x7f080015;
-        public static final int light_off=0x7f080014;
+        public static final int info=0x7f08000b;
+        public static final int info_desc=0x7f08000f;
+        public static final int info_text=0x7f080014;
+        public static final int light_error=0x7f080017;
+        public static final int light_off=0x7f080016;
         /**  Home menu 
          */
-        public static final int light_on=0x7f080013;
-        public static final int loading_devices=0x7f080011;
-        public static final int login_progress_logging_in=0x7f08001d;
-        public static final int premade_mods=0x7f08000b;
-        public static final int premade_mods_desc=0x7f08000f;
-        public static final int premade_mods_toast_message=0x7f080010;
-        public static final int prompt_password=0x7f080018;
+        public static final int light_on=0x7f080015;
+        public static final int loading_devices=0x7f080013;
+        public static final int login_progress_logging_in=0x7f08001f;
+        public static final int performing_action=0x7f080008;
+        public static final int performing_action_title=0x7f080009;
+        public static final int premade_mods=0x7f08000d;
+        public static final int premade_mods_desc=0x7f080011;
+        public static final int premade_mods_toast_message=0x7f080012;
+        public static final int prompt_password=0x7f08001a;
         /**  Strings related to login 
          */
-        public static final int prompt_username=0x7f080017;
-        public static final int save_username_and_pass=0x7f080019;
-        public static final int settings=0x7f08000a;
-        public static final int settings_button_text=0x7f080025;
-        public static final int settings_desc=0x7f08000e;
-        public static final int settings_dialog_text=0x7f080026;
-        public static final int settings_dialog_title=0x7f080027;
-        public static final int settings_logout_toast_message=0x7f080028;
-        public static final int settings_sound_disabled_toast_message=0x7f08002a;
-        public static final int settings_sound_enabled_toast_message=0x7f080029;
-        public static final int settings_sound_text=0x7f080023;
-        public static final int settings_vibra_disabled_toast_message=0x7f08002c;
-        public static final int settings_vibra_enabled_toast_message=0x7f08002b;
-        public static final int settings_vibra_text=0x7f080024;
+        public static final int prompt_username=0x7f080019;
+        public static final int save_username_and_pass=0x7f08001b;
+        public static final int settings=0x7f08000c;
+        public static final int settings_button_text=0x7f080027;
+        public static final int settings_desc=0x7f080010;
+        public static final int settings_dialog_text=0x7f080028;
+        public static final int settings_dialog_title=0x7f080029;
+        public static final int settings_logout_toast_message=0x7f08002a;
+        public static final int settings_sound_disabled_toast_message=0x7f08002c;
+        public static final int settings_sound_enabled_toast_message=0x7f08002b;
+        public static final int settings_sound_text=0x7f080025;
+        public static final int settings_vibra_disabled_toast_message=0x7f08002e;
+        public static final int settings_vibra_enabled_toast_message=0x7f08002d;
+        public static final int settings_vibra_text=0x7f080026;
         public static final int title_activity_home=0x7f080003;
         public static final int title_activity_info=0x7f080004;
         public static final int title_activity_lights_list=0x7f080007;
-        public static final int title_activity_login=0x7f080016;
+        public static final int title_activity_login=0x7f080018;
         public static final int title_activity_main_devices_list=0x7f080006;
         public static final int title_activity_settings=0x7f080005;
     }

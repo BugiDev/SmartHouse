@@ -22,6 +22,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,6 +43,8 @@ public class OnOffTask extends AsyncTask<Void, Void, String> {
 	private String room;
 	private CustomListAdapter adapter;
 	private int positionInList;
+	
+	Dialog dialog = null;
 
 	public OnOffTask() {
 		// TODO Auto-generated constructor stub
@@ -55,6 +58,13 @@ public class OnOffTask extends AsyncTask<Void, Void, String> {
 		this.room = room;
 		this.adapter = adapter;
 		this.positionInList = positionInList;
+	}
+	
+	@Override
+	protected void onPreExecute(){
+		dialog = new Dialog(activity, R.style.custom_dialog);
+		prepDialog();
+		dialog.show();
 	}
 
 	@Override
@@ -139,6 +149,7 @@ public class OnOffTask extends AsyncTask<Void, Void, String> {
 		}
 
 		adapter.notifyDataSetChanged();
+		dialog.dismiss();
 
 	}
 
@@ -219,6 +230,13 @@ public class OnOffTask extends AsyncTask<Void, Void, String> {
 		}
 
 		showToastMessage(message);
+	}
+	
+	public void prepDialog() {
+
+		dialog.setContentView(R.layout.custom_dialog_action);
+		dialog.setTitle(R.string.performing_action_title);
+
 	}
 
 }

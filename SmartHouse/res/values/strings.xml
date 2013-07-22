@@ -9,5 +9,7 @@
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_main_devices_list">All Devices</string>
     <string name="title_activity_lights_list">Lights</string>
+    <string name="performing_action">Performing action&#8230;</string>
+    <string name="performing_action_title">Performing action&#8230;</string>
 
 </resources>
