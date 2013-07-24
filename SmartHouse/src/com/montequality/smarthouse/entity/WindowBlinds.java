@@ -1,18 +1,19 @@
 package com.montequality.smarthouse.entity;
 
-public class Boiler {
+public class WindowBlinds {
+	
 
 	private int id;
-	private boolean power;
+	private String direction;
 	private String room;
 	
-	public Boiler(int id, boolean power, String room) {
+	public WindowBlinds(int id, String direction, String room) {
 		this.setId(id);
-		this.setPower(power);
 		this.setRoom(room);
+		this.setDirection(direction);
 	}
 	
-	public Boiler() {
+	public WindowBlinds() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -24,14 +25,6 @@ public class Boiler {
 		this.id = id;
 	}
 
-	public boolean isPower() {
-		return power;
-	}
-
-	public void setPower(boolean power) {
-		this.power = power;
-	}
-
 	public String getRoom() {
 		return room;
 	}
@@ -39,6 +32,13 @@ public class Boiler {
 	public void setRoom(String room) {
 		this.room = room;
 	}
-	
-	
+
+	public String getDirection() {
+		return direction;
+	}
+
+	public void setDirection(String direction) {
+		this.direction = direction;
+	}
+
 }
