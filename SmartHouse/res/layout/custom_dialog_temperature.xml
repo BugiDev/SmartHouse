@@ -1,0 +1,50 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/custom_dialog_border" >
+
+    <View
+        android:id="@+id/titleDividerTop"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:background="@color/blue"
+        android:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/dialog_temperature_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:contentDescription="@string/temperature_description" />
+
+    <TextView
+        android:id="@+id/dialog_temperature_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/dialog_temperature_image"
+        android:textColor="@color/blue"
+        android:textColorHighlight="@color/blue"
+        android:textColorHint="@color/blue"
+        android:textIsSelectable="false" />
+
+    <Button
+        android:id="@+id/dialog_temperature_button_ok"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/dialog_temperature_image"
+        android:layout_below="@+id/dialog_temperature_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/custom_blue_button"
+        android:text="@string/dialog_button_ok"
+        android:textColor="@color/blue" />
+
+
+</RelativeLayout>

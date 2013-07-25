@@ -1,0 +1,8 @@
+<resources>
+
+    <!-- Home menu -->
+    <string name="temperature_title">Temperature</string>
+    <string name="temperature_text">Temperature is:</string>
+    <string name="temperature_description">Image for temperature</string>
+
+</resources>

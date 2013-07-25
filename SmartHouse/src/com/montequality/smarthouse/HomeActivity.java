@@ -9,7 +9,6 @@ import android.media.SoundPool;
 import android.media.SoundPool.OnLoadCompleteListener;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -146,10 +145,6 @@ public class HomeActivity extends Activity {
 				Intent intent = new Intent(HomeActivity.this,
 						SettingsActivity.class);
 				startActivity(intent);
-				Log.d("PROBA HOME",
-						"Sound = " + preferences.getBoolean("sound", true));
-				Log.d("PROBA HOME",
-						"Vibra = " + preferences.getBoolean("vibra", true));
 			}
 		});
 

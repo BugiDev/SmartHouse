@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -16,28 +17,42 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.montequality.smarthouse.camera.MjpegActivity;
+import com.montequality.smarthouse.entity.Aircondition;
 import com.montequality.smarthouse.entity.Boiler;
+import com.montequality.smarthouse.entity.Camera;
 import com.montequality.smarthouse.entity.Light;
+import com.montequality.smarthouse.entity.TV;
 import com.montequality.smarthouse.entity.Temperature;
+import com.montequality.smarthouse.entity.WindowBlinds;
 import com.montequality.smarthouse.tasks.OnOffTask;
 import com.montequality.smarthouse.util.CustomListAdapter;
 
 public class MainDevicesListActivity extends ListActivity {
 
 	CustomListAdapter adapter;
+	Dialog dialog = null;
 
 	SharedPreferences preferences;
 	SharedPreferences.Editor editor;
-	
+
 	OnOffTask onOffTask;
 
 	List<Light> lightList = new ArrayList<Light>();
 	List<Boiler> boilerList = new ArrayList<Boiler>();
 	List<Temperature> temperatureList = new ArrayList<Temperature>();
+	List<Camera> cameraList = new ArrayList<Camera>();
+	List<Aircondition> airconditionList = new ArrayList<Aircondition>();
+	List<TV> tvList = new ArrayList<TV>();
+	List<WindowBlinds> windowBlindsList = new ArrayList<WindowBlinds>();
 
 	List<String> allDevices = new ArrayList<String>();
 	List<Integer> drawableLeft = new ArrayList<Integer>();
@@ -53,6 +68,9 @@ public class MainDevicesListActivity extends ListActivity {
 		preferences = getSharedPreferences("smartHouse_auth",
 				Context.MODE_PRIVATE);
 		editor = preferences.edit();
+		
+		dialog = new Dialog(this, R.style.custom_dialog);
+		prepDialog();
 
 	}
 
@@ -61,7 +79,7 @@ public class MainDevicesListActivity extends ListActivity {
 
 		String item = (String) getListAdapter().getItem(position);
 
-		if(item.equalsIgnoreCase("Lights")){
+		if (item.equalsIgnoreCase("Lights")) {
 			if (lightList.size() > 1) {
 				Intent intent = new Intent(this, LightsList.class);
 				intent.putExtra("jsonDevices",
@@ -73,18 +91,30 @@ public class MainDevicesListActivity extends ListActivity {
 				onOffTask.execute((Void) null);
 			}
 
-		}else if(item.equalsIgnoreCase("Boiler")){
+		} else if (item.equalsIgnoreCase("Boiler")) {
 			if (boilerList.size() > 1) {
-				// TODO Auto-generated catch block
+				Intent intent = new Intent(this, BoilerList.class);
+				intent.putExtra("jsonDevices",
+						getIntent().getStringExtra("jsonDevices"));
+				startActivity(intent);
 			} else if (boilerList.size() == 1) {
 				onOffTask = new OnOffTask(this, boilerList.get(0).getId(),
-						"Boiler", boilerList.get(0).getRoom(), adapter, position);
+						"Boiler", boilerList.get(0).getRoom(), adapter,
+						position);
 				onOffTask.execute((Void) null);
 			}
-		}else{
+		} else if (item.equalsIgnoreCase("Cameras")) {
+			Intent intent = new Intent(this, MjpegActivity.class);
+			intent.putExtra("cameraURL",
+					cameraList.get(0).getPath());
+			startActivity(intent);
+		}else if(item.contains("Temperature")){
+			dialog.show();
+		}
+		else {
 			showToastMessage(item + " clicked");
 		}
-		
+
 		adapter.notifyDataSetChanged();
 
 	}
@@ -144,12 +174,76 @@ public class MainDevicesListActivity extends ListActivity {
 				JSONObject json_data;
 
 				json_data = jArray.getJSONObject(i);
-				Temperature light_single = new Temperature(
+				Temperature temperature_single = new Temperature(
 						json_data.getInt("id"),
 						json_data.getInt("temperature"),
 						json_data.getString("room"));
 
-				temperatureList.add(light_single);
+				temperatureList.add(temperature_single);
+			}
+
+			jArray = jsonObj.getJSONArray("airconditionList");
+
+			for (int i = 0; i < jArray.length(); i++) {
+
+				JSONObject json_data;
+
+				json_data = jArray.getJSONObject(i);
+				Aircondition air_single = new Aircondition(
+						json_data.getInt("id"),
+						json_data.getBoolean("power"),
+						json_data.getString("room"),
+						json_data.getString("mode"),
+						json_data.getInt("temperature"));
+
+				airconditionList.add(air_single);
+			}
+
+			jArray = jsonObj.getJSONArray("cameraList");
+
+			for (int i = 0; i < jArray.length(); i++) {
+
+				JSONObject json_data;
+
+				json_data = jArray.getJSONObject(i);
+				Camera camera_single = new Camera(
+						json_data.getInt("id"),
+						json_data.getString("path"),
+						json_data.getString("room"));
+
+				cameraList.add(camera_single);
+			}
+			
+			jArray = jsonObj.getJSONArray("tvList");
+
+			for (int i = 0; i < jArray.length(); i++) {
+
+				JSONObject json_data;
+
+				json_data = jArray.getJSONObject(i);
+				TV tv_single = new TV(
+						json_data.getInt("id"),
+						json_data.getBoolean("power"),
+						json_data.getString("room"),
+						json_data.getInt("chanell"),
+						json_data.getInt("volume"));
+
+						tvList.add(tv_single);
+			}
+			
+			jArray = jsonObj.getJSONArray("windowsList");
+
+			for (int i = 0; i < jArray.length(); i++) {
+
+				JSONObject json_data;
+
+				json_data = jArray.getJSONObject(i);
+				WindowBlinds window_single = new WindowBlinds(
+						json_data.getInt("id"), 
+						json_data.getString("direction"), 
+						json_data.getString("room"));
+
+						windowBlindsList.add(window_single);
 			}
 
 		} catch (JSONException e) {
@@ -175,7 +269,6 @@ public class MainDevicesListActivity extends ListActivity {
 			}
 		}
 
-
 		if (boilerList.size() > 1) {
 			drawableRight.add(R.drawable.list_more);
 			allDevices.add("Boiler");
@@ -189,7 +282,7 @@ public class MainDevicesListActivity extends ListActivity {
 				drawableRight.add(R.drawable.led_off);
 			}
 		}
-		
+
 		drawableLeft.add(R.drawable.tv);
 		allDevices.add("TV");
 		drawableRight.add(R.drawable.remote);
@@ -205,6 +298,10 @@ public class MainDevicesListActivity extends ListActivity {
 		allDevices.add("Cameras");
 		drawableLeft.add(R.drawable.camera);
 		drawableRight.add(R.drawable.watch);
+		
+		allDevices.add("Temperature: ".concat(Integer.toString(temperatureList.get(0).getTemperature())).concat("°C"));
+		drawableLeft.add(R.drawable.temperature);
+		drawableRight.add(R.drawable.temperature);
 
 		adapter = new CustomListAdapter(this, allDevices, drawableLeft,
 				drawableRight);
@@ -216,6 +313,31 @@ public class MainDevicesListActivity extends ListActivity {
 		list.setDivider(blue);
 		list.setDividerHeight(1);
 		list.setBackgroundColor(getResources().getColor(R.color.grey));
+
+	}
+	
+	public void prepDialog() {
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		dialog.setContentView(R.layout.custom_dialog_temperature);
+		dialog.setTitle(R.string.temperature_title);
+	
+
+		// set the custom dialog components - text, image and button
+		TextView text = (TextView) dialog.findViewById(R.id.dialog_temperature_text);
+		text.setText("Temperature: ".concat(Integer.toString(temperatureList.get(0).getTemperature())).concat("°C"));
+
+		ImageView image = (ImageView) dialog.findViewById(R.id.dialog_temperature_image);
+		image.setImageResource(R.drawable.temperature);
+
+		Button dialogButtonOK = (Button) dialog
+				.findViewById(R.id.dialog_temperature_button_ok);
+		// if button is clicked, close the custom dialog
+		dialogButtonOK.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});
 
 	}
 

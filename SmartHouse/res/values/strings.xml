@@ -11,5 +11,7 @@
     <string name="title_activity_lights_list">Lights</string>
     <string name="performing_action">Performing action&#8230;</string>
     <string name="performing_action_title">Performing action&#8230;</string>
+    <string name="title_activity_boiler_list">List of all boilers</string>
+    <string name="title_activity_mjpeg">MjpegActivity</string>
 
 </resources>

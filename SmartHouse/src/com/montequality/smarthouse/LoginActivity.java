@@ -7,7 +7,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.SoundPool;
@@ -122,11 +121,10 @@ public class LoginActivity extends Activity {
 						attemptLogin();
 					}
 				});
-
-		if(preferences.contains("username") && preferences.contains("password")){
-			Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-			finish();
-			startActivity(intent);
+		
+		if(preferences.getString("username", null) != null && preferences.getString("password", null) != null){
+			AuthenticateTask authTask = new AuthenticateTask(this, preferences.getString("username", null), preferences.getString("password", null));
+			authTask.execute((Void) null);
 		}
 		
 	}
@@ -208,7 +206,7 @@ public class LoginActivity extends Activity {
 			// perform the user login attempt.
 			mLoginStatusMessageView.setText(R.string.login_progress_logging_in);
 			showProgress(true);
-			mAuthTask = new AuthenticateTask(this);
+			mAuthTask = new AuthenticateTask(this, mUsernameView.getText().toString(), mPasswordView.getText().toString());
 			mAuthTask.execute((Void) null);
 		}
 	}

@@ -8,10 +8,7 @@ import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.media.SoundPool.OnLoadCompleteListener;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Vibrator;
 import android.provider.Settings;
 import android.view.Menu;
@@ -21,10 +18,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.montequality.smarthouse.tasks.CheckInternetTask;
+
 public class SplashScreenActivity extends Activity {
 
-	private static final int SPLASH_TIME = 2 * 1000;// 3 seconds
-	Dialog dialog = null;
+	public Dialog dialog = null;
 	private SoundPool soundPool;
 	private int soundID;
 	boolean loaded = false;
@@ -82,12 +80,7 @@ public class SplashScreenActivity extends Activity {
 		super.onBackPressed();
 	}
 
-	private boolean isNetworkAvailable() {
-		ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo activeNetworkInfo = connectivityManager
-				.getActiveNetworkInfo();
-		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-	}
+	
 
 	public void prepDialog() {
 
@@ -142,34 +135,9 @@ public class SplashScreenActivity extends Activity {
 
 	public void showSplash() {
 
-		try {
-			new Handler().postDelayed(new Runnable() {
-
-				public void run() {
-
-					if (isNetworkAvailable()) {
-						SplashScreenActivity.this.finish();
-
-						overridePendingTransition(R.anim.fade_in,
-								R.anim.fade_out);
-
-						Intent intent = new Intent(SplashScreenActivity.this,
-								LoginActivity.class);
-						startActivity(intent);
-					} else {
-						dialog.show();
-					}
-
-				}
-
-			}, SPLASH_TIME);
-
-			new Handler().postDelayed(new Runnable() {
-				public void run() {
-				}
-			}, SPLASH_TIME);
-		} catch (Exception e) {
-		}
+		CheckInternetTask checkInternet = new CheckInternetTask(this);
+		
+		checkInternet.execute((Void) null);
 	}
 
 	@Override
@@ -205,5 +173,7 @@ public class SplashScreenActivity extends Activity {
 	        soundPool.play(soundID, volume, volume, 1, 0, 1f);
 	      }
 	}
+	
+	
 	
 }

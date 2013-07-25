@@ -71,6 +71,18 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.montequality.smarthouse.MainDevicesListActivity" />
         </activity>
+        <activity
+            android:name="com.montequality.smarthouse.BoilerList"
+            android:label="@string/title_activity_boiler_list" >
+        </activity>
+        <activity
+            android:name="com.montequality.smarthouse.camera.MjpegActivity"
+            android:label="@string/title_activity_mjpeg"
+            android:parentActivityName="com.montequality.smarthouse.MainDevicesListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.montequality.smarthouse.MainDevicesListActivity" />
+        </activity>
     </application>
 
 </manifest>

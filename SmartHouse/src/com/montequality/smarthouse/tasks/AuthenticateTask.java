@@ -36,8 +36,10 @@ public class AuthenticateTask extends AsyncTask<Void, Boolean, Boolean> {
 	private String username = "";
 	private String pass = ""; 
 
-	public AuthenticateTask(LoginActivity activity) {
+	public AuthenticateTask(LoginActivity activity, String username, String password) {
 		this.activity = activity;
+		this.username = username;
+		this.pass = password;
 	}
 
 	@Override
@@ -49,9 +51,6 @@ public class AuthenticateTask extends AsyncTask<Void, Boolean, Boolean> {
 			
 			String hostURL = properties.getProperty("hostURL");
 			String methodName = properties.getProperty("authenticateMethod");
-			
-			username = activity.mUsernameView.getText().toString();
-			pass = activity.mPasswordView.getText().toString();
 			
 			URI uri = new URI(hostURL.concat(methodName));
 			
