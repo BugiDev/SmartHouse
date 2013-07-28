@@ -2,14 +2,8 @@ package com.montequality.smarthouse;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.media.AudioManager;
-import android.media.SoundPool;
-import android.media.SoundPool.OnLoadCompleteListener;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.provider.Settings;
 import android.view.Menu;
 import android.view.View;
@@ -18,56 +12,24 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.montequality.smarthouse.tasks.AuthenticateFromPrefsTask;
 import com.montequality.smarthouse.tasks.CheckInternetTask;
+import com.montequality.smarthouse.util.SharedPrefs;
+import com.montequality.smarthouse.util.SoundAndVibration;
 
 public class SplashScreenActivity extends Activity {
 
 	public Dialog dialog = null;
-	private SoundPool soundPool;
-	private int soundID;
-	boolean loaded = false;
-	Vibrator vibe;
-	
-	SharedPreferences preferences;
-	SharedPreferences.Editor editor;
-	
-	boolean soundSettings;
-	boolean vibraSettings;
+	private SharedPrefs sharedPrefs;
+	private SoundAndVibration soundAndVibra;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash_screen);
-		vibe = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
-		this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
 		
-		preferences = getSharedPreferences("smartHouse_auth",
-				Context.MODE_PRIVATE);
-		editor = preferences.edit();
-		
-		if(!preferences.contains("sound")){
-			editor.putBoolean("sound", true);
-			editor.commit();
-		}
-		
-		if(!preferences.contains("vibra")){
-			editor.putBoolean("vibra", true);
-			editor.commit();
-		}
-
-		soundSettings = preferences.getBoolean("sound", true);
-		vibraSettings = preferences.getBoolean("vibra", true);
-
-		soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
-		soundPool.setOnLoadCompleteListener(new OnLoadCompleteListener() {
-            @Override
-            public void onLoadComplete(SoundPool soundPool, int sampleId,
-                    int status) {
-                loaded = true;
-            }
-        });
-		
-		soundID = soundPool.load(this, R.raw.button_click, 1);
+		setSharedPrefs(new SharedPrefs(this));
+		setSoundAndVibra(new SoundAndVibration(getSharedPrefs(), this));
 
 		dialog = new Dialog(this, R.style.custom_dialog);
 		prepDialog();
@@ -100,13 +62,7 @@ public class SplashScreenActivity extends Activity {
 		dialogButtonOK.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(soundSettings){
-					fireSound();
-				}
-				
-				if(vibraSettings){
-					vibe.vibrate(80);
-				}
+				getSoundAndVibra().playSoundAndVibra();
 				dialog.dismiss();
 				Intent intent = new Intent(Settings.ACTION_SETTINGS);
 				startActivity(intent);
@@ -119,13 +75,7 @@ public class SplashScreenActivity extends Activity {
 		dialogButtonCancle.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(soundSettings){
-					fireSound();
-				}
-				
-				if(vibraSettings){
-					vibe.vibrate(80);
-				}
+				getSoundAndVibra().playSoundAndVibra();
 				dialog.dismiss();
 				finish();
 			}
@@ -138,6 +88,10 @@ public class SplashScreenActivity extends Activity {
 		CheckInternetTask checkInternet = new CheckInternetTask(this);
 		
 		checkInternet.execute((Void) null);
+		
+		AuthenticateFromPrefsTask authFromPrefs = new AuthenticateFromPrefsTask(this, getSharedPrefs().getPreferences().getString("username", null), getSharedPrefs().getPreferences().getString("password", null));
+	
+		authFromPrefs.execute((Void)null);
 	}
 
 	@Override
@@ -149,31 +103,30 @@ public class SplashScreenActivity extends Activity {
 
 	@Override
 	protected void onResume() {
+		
+		soundAndVibra = new SoundAndVibration(sharedPrefs, this);
 
 		if (dialog.isShowing()) {
 			dialog.dismiss();
 		}
 
 		showSplash();
-		soundSettings = preferences.getBoolean("sound", true);
-		vibraSettings = preferences.getBoolean("vibra", true);
 		super.onResume();
 	}
 
-	public void fireSound(){
-		// Getting the user sound settings
-	      AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
-	      float actualVolume = (float) audioManager
-	          .getStreamVolume(AudioManager.STREAM_MUSIC);
-	      float maxVolume = (float) audioManager
-	          .getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-	      float volume = actualVolume / maxVolume;
-	      // Is the sound loaded already?
-	      if (loaded) {
-	        soundPool.play(soundID, volume, volume, 1, 0, 1f);
-	      }
+	public SharedPrefs getSharedPrefs() {
+		return sharedPrefs;
 	}
-	
-	
-	
+
+	public void setSharedPrefs(SharedPrefs sharedPrefs) {
+		this.sharedPrefs = sharedPrefs;
+	}
+
+	public SoundAndVibration getSoundAndVibra() {
+		return soundAndVibra;
+	}
+
+	public void setSoundAndVibra(SoundAndVibration soundAndVibra) {
+		this.soundAndVibra = soundAndVibra;
+	}
 }

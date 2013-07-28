@@ -2,8 +2,11 @@ package com.montequality.smarthouse.camera;
 
 import java.io.IOException;
 
+import com.montequality.smarthouse.R;
+
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -13,26 +16,28 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Toast;
 
 public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
     private static final String TAG = "MjpegView";
 
-    public final static int POSITION_UPPER_LEFT  = 9;
+    public final static int POSITION_UPPER_LEFT = 9;
     public final static int POSITION_UPPER_RIGHT = 3;
-    public final static int POSITION_LOWER_LEFT  = 12;
+    public final static int POSITION_LOWER_LEFT = 12;
     public final static int POSITION_LOWER_RIGHT = 6;
 
-    public final static int SIZE_STANDARD   = 1; 
-    public final static int SIZE_BEST_FIT   = 4;
+    public final static int SIZE_STANDARD = 1;
+    public final static int SIZE_BEST_FIT = 4;
     public final static int SIZE_FULLSCREEN = 8;
 
     private MjpegViewThread thread;
-    private MjpegInputStream mIn = null;    
+    private MjpegInputStream mIn = null;
     private boolean showFps = false;
     private boolean mRun = false;
-    private boolean surfaceDone = false;    
+    private boolean surfaceDone = false;
     private Paint overlayPaint;
     private int overlayTextColor;
     private int overlayBackgroundColor;
@@ -40,12 +45,19 @@ public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
     private int dispWidth;
     private int dispHeight;
     private int displayMode;
+    
+    private Context context;
+    Rect b2 = new Rect();
+    
+    
 
     public class MjpegViewThread extends Thread {
         private SurfaceHolder mSurfaceHolder;
         private int frameCounter = 0;
         private long start;
         private Bitmap ovl;
+        private Bitmap bitmap;
+        
 
         public MjpegViewThread(SurfaceHolder surfaceHolder, Context context) {
             mSurfaceHolder = surfaceHolder;
@@ -71,14 +83,14 @@ public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
                 tempy = (dispHeight / 2) - (bmh / 2);
                 return new Rect(tempx, tempy, bmw + tempx, bmh + tempy);
             }
-            if (displayMode == MjpegView.SIZE_FULLSCREEN){
+            if (displayMode == MjpegView.SIZE_FULLSCREEN) {
                 return new Rect(0, 0, dispWidth, dispHeight);
             }
             return null;
         }
 
         public void setSurfaceSize(int width, int height) {
-            synchronized(mSurfaceHolder) {
+            synchronized (mSurfaceHolder) {
                 dispWidth = width;
                 dispHeight = height;
             }
@@ -87,15 +99,29 @@ public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
         private Bitmap makeFpsOverlay(Paint p, String text) {
             Rect b = new Rect();
             p.getTextBounds(text, 0, text.length(), b);
-            int bwidth  = b.width()+2;
-            int bheight = b.height()+2;
+            int bwidth = b.width() + 2;
+            int bheight = b.height() + 2;
             Bitmap bm = Bitmap.createBitmap(bwidth, bheight, Bitmap.Config.ARGB_8888);
             Canvas c = new Canvas(bm);
             p.setColor(overlayBackgroundColor);
             c.drawRect(0, 0, bwidth, bheight, p);
             p.setColor(overlayTextColor);
-            c.drawText(text, -b.left+1, (bheight/2)-((p.ascent()+p.descent())/2)+1, p);
-            return bm;           
+            c.drawText(text, -b.left + 1, (bheight / 2) - ((p.ascent() + p.descent()) / 2) + 1, p);
+            return bm;
+        }
+        
+        private Bitmap makeBitmapOverlay() {
+          
+            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.led_on);
+            Bitmap mutableBitmap = bm.copy(Bitmap.Config.ARGB_8888, true);
+            Canvas c = new Canvas(mutableBitmap);
+            Paint p = new Paint();
+            c.drawRect(0, 0, bm.getWidth(), bm.getHeight(), p);
+            b2.left = 0;
+            b2.top = 0;
+            b2.right = bm.getWidth();
+            b2.bottom = bm.getHeight();
+            return bm;
         }
 
         public void run() {
@@ -109,29 +135,31 @@ public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
             Paint p = new Paint();
             String fps;
             while (mRun) {
-                if(surfaceDone) {
+                if (surfaceDone) {
                     try {
                         c = mSurfaceHolder.lockCanvas();
                         synchronized (mSurfaceHolder) {
                             try {
                                 bm = mIn.readMjpegFrame();
-                                destRect = destRect(bm.getWidth(),bm.getHeight());
+                                destRect = destRect(bm.getWidth(), bm.getHeight());
                                 c.drawColor(Color.BLACK);
                                 c.drawBitmap(bm, null, destRect, p);
-                                if(showFps) {
+                                if (showFps) {
                                     p.setXfermode(mode);
-                                    if(ovl != null) {
-                                        height = ((ovlPos & 1) == 1) ? destRect.top : destRect.bottom-ovl.getHeight();
-                                        width  = ((ovlPos & 8) == 8) ? destRect.left : destRect.right -ovl.getWidth();
+                                    if (ovl != null) {
+                                        height = ((ovlPos & 1) == 1) ? destRect.top : destRect.bottom - ovl.getHeight();
+                                        width = ((ovlPos & 8) == 8) ? destRect.left : destRect.right - ovl.getWidth();
                                         c.drawBitmap(ovl, width, height, null);
+                                        c.drawBitmap(bitmap, destRect.top/2, destRect.left/2, null);
                                     }
                                     p.setXfermode(null);
                                     frameCounter++;
-                                    if((System.currentTimeMillis() - start) >= 1000) {
-                                        fps = String.valueOf(frameCounter)+" fps";
-                                        frameCounter = 0; 
+                                    if ((System.currentTimeMillis() - start) >= 1000) {
+                                        fps = String.valueOf(frameCounter) + " fps";
+                                        frameCounter = 0;
                                         start = System.currentTimeMillis();
                                         ovl = makeFpsOverlay(overlayPaint, fps);
+                                        bitmap = makeBitmapOverlay();
                                     }
                                 }
                             } catch (IOException e) {
@@ -139,14 +167,35 @@ public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
                                 Log.d(TAG, "catch IOException hit in run", e);
                             }
                         }
-                    } finally { 
+                    } finally {
                         if (c != null) {
-                            mSurfaceHolder.unlockCanvasAndPost(c); 
+                            mSurfaceHolder.unlockCanvasAndPost(c);
                         }
                     }
                 }
             }
         }
+    }
+    
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+
+            int x = (int) event.getX();
+            int y = (int) event.getY();
+            if(b2.contains(x, y)){
+                Log.d("CLICK", "CLICK");
+            }else{
+                Log.d("NOT", "NOT");
+            }
+            
+            
+          Log.d("touched", Integer.toString(x)+", "+ Integer.toString(y));
+        }
+
+        return true;
     }
 
     private void init(Context context) {
@@ -166,17 +215,17 @@ public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
         dispHeight = getHeight();
     }
 
-    public void startPlayback() { 
-        if(mIn != null) {
+    public void startPlayback() {
+        if (mIn != null) {
             mRun = true;
-            thread.start();         
+            thread.start();
         }
     }
 
-    public void stopPlayback() { 
+    public void stopPlayback() {
         mRun = false;
         boolean retry = true;
-        while(retry) {
+        while (retry) {
             try {
                 thread.join();
                 retry = false;
@@ -187,54 +236,56 @@ public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
-    public MjpegView(Context context, AttributeSet attrs) { 
-        super(context, attrs); init(context); 
+    public MjpegView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init(context);
+        this.context = context;
     }
 
-    public void surfaceChanged(SurfaceHolder holder, int f, int w, int h) { 
-        thread.setSurfaceSize(w, h); 
+    public void surfaceChanged(SurfaceHolder holder, int f, int w, int h) {
+        thread.setSurfaceSize(w, h);
     }
 
-    public void surfaceDestroyed(SurfaceHolder holder) { 
-        surfaceDone = false; 
-        stopPlayback(); 
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        surfaceDone = false;
+        stopPlayback();
     }
 
-    public MjpegView(Context context) { 
+    public MjpegView(Context context) {
         super(context);
-        init(context); 
+        init(context);
     }
 
-    public void surfaceCreated(SurfaceHolder holder) { 
-        surfaceDone = true; 
+    public void surfaceCreated(SurfaceHolder holder) {
+        surfaceDone = true;
     }
 
-    public void showFps(boolean b) { 
-        showFps = b; 
+    public void showFps(boolean b) {
+        showFps = b;
     }
 
-    public void setSource(MjpegInputStream source) { 
+    public void setSource(MjpegInputStream source) {
         mIn = source;
         startPlayback();
     }
 
-    public void setOverlayPaint(Paint p) { 
-        overlayPaint = p; 
+    public void setOverlayPaint(Paint p) {
+        overlayPaint = p;
     }
 
-    public void setOverlayTextColor(int c) { 
-        overlayTextColor = c; 
+    public void setOverlayTextColor(int c) {
+        overlayTextColor = c;
     }
 
-    public void setOverlayBackgroundColor(int c) { 
-        overlayBackgroundColor = c; 
+    public void setOverlayBackgroundColor(int c) {
+        overlayBackgroundColor = c;
     }
 
-    public void setOverlayPosition(int p) { 
-        ovlPos = p; 
+    public void setOverlayPosition(int p) {
+        ovlPos = p;
     }
 
-    public void setDisplayMode(int s) { 
-        displayMode = s; 
+    public void setDisplayMode(int s) {
+        displayMode = s;
     }
 }

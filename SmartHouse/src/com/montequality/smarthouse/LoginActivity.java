@@ -1,19 +1,11 @@
 package com.montequality.smarthouse;
 
-import com.montequality.smarthouse.tasks.AuthenticateTask;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.media.AudioManager;
-import android.media.SoundPool;
-import android.media.SoundPool.OnLoadCompleteListener;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -24,20 +16,19 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.montequality.smarthouse.tasks.AuthenticateTask;
+import com.montequality.smarthouse.util.SharedPrefs;
+import com.montequality.smarthouse.util.SoundAndVibration;
+
 /**
  * Activity which displays a login screen to the user, offering registration as
  * well.
  */
 public class LoginActivity extends Activity {
 
-	private SoundPool soundPool;
-	private int soundID;
-	boolean loaded = false;
-	Vibrator vibe;
-	
-	boolean soundSettings;
-	boolean vibraSettings;
-	
+	private SharedPrefs sharedPrefs;
+	private SoundAndVibration soundAndVibra;
+
 	/**
 	 * Keep track of the login task to ensure we can cancel it if requested.
 	 */
@@ -54,40 +45,21 @@ public class LoginActivity extends Activity {
 	public View mLoginStatusView;
 	public TextView mLoginStatusMessageView;
 	public CheckBox saveCheck;
-	
-	public SharedPreferences preferences;
-	public SharedPreferences.Editor editor;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_login);
+		
+		setSharedPrefs(new SharedPrefs(this));
+		setSoundAndVibra(new SoundAndVibration(getSharedPrefs(), this));
 
 		// Set up the login form.
 		mUsernameView = (EditText) findViewById(R.id.username);
 		mUsernameView.setText(mUsername);
-		
+
 		saveCheck = (CheckBox) findViewById(R.id.login_save_check);
-		preferences = getSharedPreferences("smartHouse_auth", Context.MODE_PRIVATE);
-		editor = preferences.edit();
-		
-		soundSettings = preferences.getBoolean("sound", true);
-		vibraSettings = preferences.getBoolean("vibra", true);
-		
-		vibe = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
-		this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
-
-		soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
-		soundPool.setOnLoadCompleteListener(new OnLoadCompleteListener() {
-			@Override
-			public void onLoadComplete(SoundPool soundPool, int sampleId,
-					int status) {
-				loaded = true;
-			}
-		});
-
-		soundID = soundPool.load(this, R.raw.button_click, 1);
 
 		mPasswordView = (EditText) findViewById(R.id.password);
 		mPasswordView
@@ -111,22 +83,11 @@ public class LoginActivity extends Activity {
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
-						if (soundSettings) {
-							fireSound();
-						}
-
-						if (vibraSettings) {
-							vibe.vibrate(80);
-						}
+						getSoundAndVibra().playSoundAndVibra();
 						attemptLogin();
 					}
 				});
-		
-		if(preferences.getString("username", null) != null && preferences.getString("password", null) != null){
-			AuthenticateTask authTask = new AuthenticateTask(this, preferences.getString("username", null), preferences.getString("password", null));
-			authTask.execute((Void) null);
-		}
-		
+
 	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -137,21 +98,21 @@ public class LoginActivity extends Activity {
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		return true;
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-	    switch (item.getItemId()) {
-	        case android.R.id.home:
-	        	
-	        	/**
-	        	 * TODO: Handle on click.
-	        	 */
-	        	
-	            finish();
-	            return true;
-	        default:
-	            return super.onOptionsItemSelected(item);
-	    }
+		switch (item.getItemId()) {
+		case android.R.id.home:
+
+			/**
+			 * TODO: Handle on click.
+			 */
+
+			finish();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	/**
@@ -206,7 +167,8 @@ public class LoginActivity extends Activity {
 			// perform the user login attempt.
 			mLoginStatusMessageView.setText(R.string.login_progress_logging_in);
 			showProgress(true);
-			mAuthTask = new AuthenticateTask(this, mUsernameView.getText().toString(), mPasswordView.getText().toString());
+			mAuthTask = new AuthenticateTask(this, mUsernameView.getText()
+					.toString(), mPasswordView.getText().toString());
 			mAuthTask.execute((Void) null);
 		}
 	}
@@ -251,25 +213,34 @@ public class LoginActivity extends Activity {
 			mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
 		}
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
 		finish();
 	}
-	
-	public void fireSound() {
-		// Getting the user sound settings
-		AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
-		float actualVolume = (float) audioManager
-				.getStreamVolume(AudioManager.STREAM_MUSIC);
-		float maxVolume = (float) audioManager
-				.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-		float volume = actualVolume / maxVolume;
-		// Is the sound loaded already?
-		if (loaded) {
-			soundPool.play(soundID, volume, volume, 1, 0, 1f);
-		}
+
+	public SharedPrefs getSharedPrefs() {
+		return sharedPrefs;
+	}
+
+	public void setSharedPrefs(SharedPrefs sharedPrefs) {
+		this.sharedPrefs = sharedPrefs;
+	}
+
+	public SoundAndVibration getSoundAndVibra() {
+		return soundAndVibra;
+	}
+
+	public void setSoundAndVibra(SoundAndVibration soundAndVibra) {
+		this.soundAndVibra = soundAndVibra;
+	}
+
+	@Override
+	protected void onResume() {
+		
+		soundAndVibra = new SoundAndVibration(sharedPrefs, this);
+		super.onResume();
 	}
 	
 }

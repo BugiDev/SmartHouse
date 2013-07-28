@@ -1,14 +1,8 @@
 package com.montequality.smarthouse;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.media.AudioManager;
-import android.media.SoundPool;
-import android.media.SoundPool.OnLoadCompleteListener;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -19,23 +13,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.montequality.smarthouse.tasks.GetDevicesTask;
+import com.montequality.smarthouse.util.SharedPrefs;
+import com.montequality.smarthouse.util.SoundAndVibration;
 
 public class HomeActivity extends Activity {
 
-	private SoundPool soundPool;
-	private int soundID;
-	boolean loaded = false;
-	Vibrator vibe;
 	ImageButton devices;
 	ImageButton premadeMods;
 	ImageButton info;
 	ImageButton settigs;
 
-	public SharedPreferences preferences;
-	public SharedPreferences.Editor editor;
-
-	boolean soundSettings;
-	boolean vibraSettings;
+	private SharedPrefs sharedPrefs;
+	private SoundAndVibration soundAndVibra;
 
 	public View mHomeView;
 	public View mHomeStatusView;
@@ -48,31 +37,14 @@ public class HomeActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
 
-		preferences = getSharedPreferences("smartHouse_auth",
-				Context.MODE_PRIVATE);
-		editor = preferences.edit();
-
-		soundSettings = preferences.getBoolean("sound", true);
-		vibraSettings = preferences.getBoolean("vibra", true);
+		setSharedPrefs(new SharedPrefs(this));
+		setSoundAndVibra(new SoundAndVibration(getSharedPrefs(), this));
+		
 
 		devices = (ImageButton) findViewById(R.id.devices_button);
 		premadeMods = (ImageButton) findViewById(R.id.premade_mods_button);
 		info = (ImageButton) findViewById(R.id.info_button);
 		settigs = (ImageButton) findViewById(R.id.settings_button);
-
-		vibe = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
-		this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
-
-		soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
-		soundPool.setOnLoadCompleteListener(new OnLoadCompleteListener() {
-			@Override
-			public void onLoadComplete(SoundPool soundPool, int sampleId,
-					int status) {
-				loaded = true;
-			}
-		});
-
-		soundID = soundPool.load(this, R.raw.button_click, 1);
 
 		mHomeView = findViewById(R.id.home_layout);
 		mHomeStatusView = findViewById(R.id.home_status);
@@ -82,14 +54,8 @@ public class HomeActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				if (soundSettings) {
-					fireSound();
-				}
-
-				if (vibraSettings) {
-					vibe.vibrate(80);
-				}
-
+				
+				getSoundAndVibra().playSoundAndVibra();
 				mTestTask = new GetDevicesTask(HomeActivity.this);
 				mTestTask.execute((Void) null);
 
@@ -100,13 +66,7 @@ public class HomeActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				if (soundSettings) {
-					fireSound();
-				}
-
-				if (vibraSettings) {
-					vibe.vibrate(80);
-				}
+				getSoundAndVibra().playSoundAndVibra();
 
 				showToastMessage();
 
@@ -117,13 +77,7 @@ public class HomeActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				if (soundSettings) {
-					fireSound();
-				}
-
-				if (vibraSettings) {
-					vibe.vibrate(80);
-				}
+				getSoundAndVibra().playSoundAndVibra();
 				Intent intent = new Intent(HomeActivity.this,
 						InfoActivity.class);
 				startActivity(intent);
@@ -135,13 +89,7 @@ public class HomeActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				if (soundSettings) {
-					fireSound();
-				}
-
-				if (vibraSettings) {
-					vibe.vibrate(80);
-				}
+				getSoundAndVibra().playSoundAndVibra();
 				Intent intent = new Intent(HomeActivity.this,
 						SettingsActivity.class);
 				startActivity(intent);
@@ -157,32 +105,10 @@ public class HomeActivity extends Activity {
 		return true;
 	}
 
-	public void fireSound() {
-		// Getting the user sound settings
-		AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
-		float actualVolume = (float) audioManager
-				.getStreamVolume(AudioManager.STREAM_MUSIC);
-		float maxVolume = (float) audioManager
-				.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-		float volume = actualVolume / maxVolume;
-		// Is the sound loaded already?
-		if (loaded) {
-			soundPool.play(soundID, volume, volume, 1, 0, 1f);
-		}
-	}
-
 	@Override
 	public void onBackPressed() {
 		finish();
 		return;
-
-	}
-
-	@Override
-	protected void onResume() {
-		soundSettings = preferences.getBoolean("sound", true);
-		vibraSettings = preferences.getBoolean("vibra", true);
-		super.onResume();
 	}
 
 	private void showToastMessage() {
@@ -195,6 +121,29 @@ public class HomeActivity extends Activity {
 		toast.setDuration(Toast.LENGTH_SHORT);
 		toast.setView(layout);
 		toast.show();
+	}
+
+	public SharedPrefs getSharedPrefs() {
+		return sharedPrefs;
+	}
+
+	public void setSharedPrefs(SharedPrefs sharedPrefs) {
+		this.sharedPrefs = sharedPrefs;
+	}
+
+	public SoundAndVibration getSoundAndVibra() {
+		return soundAndVibra;
+	}
+
+	public void setSoundAndVibra(SoundAndVibration soundAndVibra) {
+		this.soundAndVibra = soundAndVibra;
+	}
+	
+	@Override
+	protected void onResume() {
+		
+		soundAndVibra = new SoundAndVibration(sharedPrefs, this);
+		super.onResume();
 	}
 
 }

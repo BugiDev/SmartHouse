@@ -3,41 +3,30 @@ package com.montequality.smarthouse;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.media.AudioManager;
-import android.media.SoundPool;
-import android.media.SoundPool.OnLoadCompleteListener;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.support.v4.app.NavUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.Toast;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.montequality.smarthouse.util.SharedPrefs;
+import com.montequality.smarthouse.util.SoundAndVibration;
 
 public class SettingsActivity extends Activity {
 	
-	private SoundPool soundPool;
-	private int soundID;
-	boolean loaded = false;
-	Vibrator vibe;
-	
-	boolean soundSettings;
-	boolean vibraSettings;
-
-	SharedPreferences preferences;
-	SharedPreferences.Editor editor;
+	private SharedPrefs sharedPrefs;
+	private SoundAndVibration soundAndVibra;
 
 	CheckBox soundCheck;
 	CheckBox vibraCheck;
@@ -52,9 +41,8 @@ public class SettingsActivity extends Activity {
 		// Show the Up button in the action bar.
 		setupActionBar();
 
-		preferences = getSharedPreferences("smartHouse_auth",
-				Context.MODE_PRIVATE);
-		editor = preferences.edit();
+		sharedPrefs = new SharedPrefs(this);
+		soundAndVibra = new SoundAndVibration(sharedPrefs, this);
 
 		soundCheck = (CheckBox) findViewById(R.id.settings_sound_check);
 		vibraCheck = (CheckBox) findViewById(R.id.settings_vibra_check);
@@ -63,48 +51,32 @@ public class SettingsActivity extends Activity {
 		dialog = new Dialog(this, R.style.custom_dialog);
 		prepDialog();
 
-		if (preferences.getBoolean("sound", true)) {
+		if (sharedPrefs.getPreferences().getBoolean("sound", true)) {
 			soundCheck.setChecked(true);
 		} else {
 			soundCheck.setChecked(false);
 		}
 
-		if ((preferences.getBoolean("vibra", true))) {
+		if ((sharedPrefs.getPreferences().getBoolean("vibra", true))) {
 			vibraCheck.setChecked(true);
 		} else {
 			vibraCheck.setChecked(false);
 		}
-		
-		soundSettings = preferences.getBoolean("sound", true);
-		vibraSettings = preferences.getBoolean("vibra", true);
-		
-		vibe = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
-		this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
-
-		soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
-		soundPool.setOnLoadCompleteListener(new OnLoadCompleteListener() {
-			@Override
-			public void onLoadComplete(SoundPool soundPool, int sampleId,
-					int status) {
-				loaded = true;
-			}
-		});
-
-		soundID = soundPool.load(this, R.raw.button_click, 1);
 
 		soundCheck.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
+				soundAndVibra.playSoundAndVibra();
 				if (isChecked) {
-					editor.putBoolean("sound", true);
-					editor.commit();
+					sharedPrefs.getEditor().putBoolean("sound", true);
+					sharedPrefs.getEditor().commit();
 					showToastMessage(R.string.settings_sound_enabled_toast_message);
 					
 				} else {
-					editor.putBoolean("sound", false);
-					editor.commit();
+					sharedPrefs.getEditor().putBoolean("sound", false);
+					sharedPrefs.getEditor().commit();
 					showToastMessage(R.string.settings_sound_disabled_toast_message);
 				}
 			}
@@ -115,13 +87,14 @@ public class SettingsActivity extends Activity {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
+				soundAndVibra.playSoundAndVibra();
 				if (isChecked) {
-					editor.putBoolean("vibra", true);
-					editor.commit();
+					sharedPrefs.getEditor().putBoolean("vibra", true);
+					sharedPrefs.getEditor().commit();
 					showToastMessage(R.string.settings_vibra_enabled_toast_message);
 				} else {
-					editor.putBoolean("vibra", false);
-					editor.commit();
+					sharedPrefs.getEditor().putBoolean("vibra", false);
+					sharedPrefs.getEditor().commit();
 					showToastMessage(R.string.settings_vibra_disabled_toast_message);
 				}
 			}
@@ -131,8 +104,8 @@ public class SettingsActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				dialog.show();
-				
+				soundAndVibra.playSoundAndVibra();
+				dialog.show();	
 			}
 		});
 
@@ -190,9 +163,10 @@ public class SettingsActivity extends Activity {
 		dialogButtonOK.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				editor.remove("username");
-				editor.remove("password");
-				editor.commit();
+				soundAndVibra.playSoundAndVibra();
+				sharedPrefs.getEditor().remove("username");
+				sharedPrefs.getEditor().remove("password");
+				sharedPrefs.getEditor().commit();
 				dialog.dismiss();
 				showToastMessage(R.string.settings_logout_toast_message);
 			}
@@ -204,6 +178,7 @@ public class SettingsActivity extends Activity {
 		dialogButtonCancle.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				soundAndVibra.playSoundAndVibra();
 				dialog.dismiss();
 			}
 		});
@@ -222,18 +197,11 @@ public class SettingsActivity extends Activity {
 		toast.show();
 	}
 	
-	public void fireSound() {
-		// Getting the user sound settings
-		AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
-		float actualVolume = (float) audioManager
-				.getStreamVolume(AudioManager.STREAM_MUSIC);
-		float maxVolume = (float) audioManager
-				.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-		float volume = actualVolume / maxVolume;
-		// Is the sound loaded already?
-		if (loaded) {
-			soundPool.play(soundID, volume, volume, 1, 0, 1f);
-		}
+	@Override
+	protected void onResume() {
+		
+		soundAndVibra = new SoundAndVibration(sharedPrefs, this);
+		super.onResume();
 	}
 
 }

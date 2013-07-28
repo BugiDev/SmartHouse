@@ -12,16 +12,17 @@ import android.os.AsyncTask;
 import com.montequality.smarthouse.HomeActivity;
 import com.montequality.smarthouse.LoginActivity;
 import com.montequality.smarthouse.R;
+import com.montequality.smarthouse.SplashScreenActivity;
 import com.montequality.smarthouse.util.HTTPHelper;
 
-public class AuthenticateTask extends AsyncTask<Void, Boolean, Boolean> {
+public class AuthenticateFromPrefsTask extends AsyncTask<Void, Boolean, Boolean> {
 
-    public LoginActivity activity;
+    public SplashScreenActivity activity;
 
     private String username = "";
     private String pass = "";
 
-    public AuthenticateTask(LoginActivity activity, String username, String password) {
+    public AuthenticateFromPrefsTask(SplashScreenActivity activity, String username, String password) {
         this.activity = activity;
         this.username = username;
         this.pass = password;
@@ -29,18 +30,24 @@ public class AuthenticateTask extends AsyncTask<Void, Boolean, Boolean> {
 
     @Override
     protected Boolean doInBackground(Void... params) {
-        
+
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         nameValuePairs.add(new BasicNameValuePair("username", username));
         nameValuePairs.add(new BasicNameValuePair("password", pass));
 
-        
         HTTPHelper httpHelper = new HTTPHelper("hostURL", "authenticateMethod", nameValuePairs, activity);
-        
-        if(!httpHelper.executeHelper().equalsIgnoreCase("-1")){
+
+        if (!httpHelper.executeHelper().equalsIgnoreCase("-1")) {
             activity.getSharedPrefs().getEditor().putString("userID", httpHelper.executeHelper());
             return true;
-        }else{
+        } else {
             return false;
         }
 
@@ -49,31 +56,23 @@ public class AuthenticateTask extends AsyncTask<Void, Boolean, Boolean> {
     @Override
     protected void onPostExecute(final Boolean success) {
 
-        activity.showProgress(false);
-        activity.mAuthTask = null;
+        activity.finish();
+
+        activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
         if (success) {
-
-            if (activity.saveCheck.isChecked()) {
-                activity.getSharedPrefs().getEditor()
-                        .putString("username", activity.mUsernameView.getText().toString());
-                activity.getSharedPrefs().getEditor()
-                        .putString("password", activity.mPasswordView.getText().toString());
-                activity.getSharedPrefs().getEditor().commit();
-            }
 
             Intent intent = new Intent(activity, HomeActivity.class);
             activity.startActivity(intent);
         } else {
-            activity.mUsernameView.setError(activity.getString(R.string.error_username_or_password));
-            activity.mUsernameView.requestFocus();
+            Intent intent = new Intent(activity, LoginActivity.class);
+            activity.startActivity(intent);
         }
     }
 
     @Override
     protected void onCancelled() {
-        activity.mAuthTask = null;
-        activity.showProgress(false);
+        activity.finish();
     }
 
 }

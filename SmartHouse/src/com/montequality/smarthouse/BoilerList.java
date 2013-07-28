@@ -9,8 +9,6 @@ import org.json.JSONObject;
 
 import android.annotation.TargetApi;
 import android.app.ListActivity;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,13 +20,15 @@ import android.widget.ListView;
 import com.montequality.smarthouse.entity.Boiler;
 import com.montequality.smarthouse.tasks.OnOffTask;
 import com.montequality.smarthouse.util.CustomListAdapter;
+import com.montequality.smarthouse.util.SharedPrefs;
+import com.montequality.smarthouse.util.SoundAndVibration;
 
 public class BoilerList extends ListActivity{
 
 	public CustomListAdapter adapter;
 
-	SharedPreferences preferences;
-	SharedPreferences.Editor editor;
+	private SharedPrefs sharedPrefs;
+	private SoundAndVibration soundAndVibra;
 
 	List<Boiler> boilerList = new ArrayList<Boiler>();
 	List<Integer> drawableLeft = new ArrayList<Integer>();
@@ -41,6 +41,9 @@ public class BoilerList extends ListActivity{
 		super.onCreate(savedInstanceState);
 		// Show the Up button in the action bar.
 		setupActionBar();
+		
+		sharedPrefs = new SharedPrefs(this);
+		soundAndVibra = new SoundAndVibration(sharedPrefs, this);
 
 		if (getIntent().getStringExtra("jsonDevices") != null) {
 			getDevicesFromJSON();
@@ -68,9 +71,6 @@ public class BoilerList extends ListActivity{
 		list.setDividerHeight(1);
 		list.setBackgroundColor(getResources().getColor(R.color.grey));
 
-		preferences = getSharedPreferences("smartHouse_auth",
-				Context.MODE_PRIVATE);
-		editor = preferences.edit();
 	}
 
 	/**
@@ -110,6 +110,8 @@ public class BoilerList extends ListActivity{
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 
+		soundAndVibra.playSoundAndVibra();
+		
 		onOffTask = new OnOffTask(this, boilerList.get(position).getId(),
 				"Boiler", boilerList.get(position).getRoom(), adapter, position);
 		onOffTask.execute((Void) null);
@@ -145,6 +147,13 @@ public class BoilerList extends ListActivity{
 			e.printStackTrace();
 		}
 
+	}
+	
+	@Override
+	protected void onResume() {
+		
+		soundAndVibra = new SoundAndVibration(sharedPrefs, this);
+		super.onResume();
 	}
 
 }

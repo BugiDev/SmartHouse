@@ -9,15 +9,13 @@ import org.json.JSONObject;
 
 import android.app.Dialog;
 import android.app.ListActivity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -35,14 +33,16 @@ import com.montequality.smarthouse.entity.Temperature;
 import com.montequality.smarthouse.entity.WindowBlinds;
 import com.montequality.smarthouse.tasks.OnOffTask;
 import com.montequality.smarthouse.util.CustomListAdapter;
+import com.montequality.smarthouse.util.SharedPrefs;
+import com.montequality.smarthouse.util.SoundAndVibration;
 
 public class MainDevicesListActivity extends ListActivity {
 
 	CustomListAdapter adapter;
 	Dialog dialog = null;
 
-	SharedPreferences preferences;
-	SharedPreferences.Editor editor;
+	private SharedPrefs sharedPrefs;
+	private SoundAndVibration soundAndVibra;
 
 	OnOffTask onOffTask;
 
@@ -65,9 +65,8 @@ public class MainDevicesListActivity extends ListActivity {
 
 		initializeList();
 
-		preferences = getSharedPreferences("smartHouse_auth",
-				Context.MODE_PRIVATE);
-		editor = preferences.edit();
+		sharedPrefs = new SharedPrefs(this);
+		soundAndVibra = new SoundAndVibration(sharedPrefs, this);
 		
 		dialog = new Dialog(this, R.style.custom_dialog);
 		prepDialog();
@@ -76,7 +75,9 @@ public class MainDevicesListActivity extends ListActivity {
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-
+		
+		soundAndVibra.playSoundAndVibra();
+		
 		String item = (String) getListAdapter().getItem(position);
 
 		if (item.equalsIgnoreCase("Lights")) {
@@ -341,4 +342,11 @@ public class MainDevicesListActivity extends ListActivity {
 
 	}
 
+	@Override
+	protected void onResume() {
+		
+		soundAndVibra = new SoundAndVibration(sharedPrefs, this);
+		super.onResume();
+	}
+	
 }
