@@ -3,6 +3,7 @@ package com.montequality.smarthouse.camera;
 import java.io.IOException;
 
 import com.montequality.smarthouse.R;
+import com.montequality.smarthouse.tasks.MoveCameraTask;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -19,7 +20,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.widget.Toast;
 
 public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
     private static final String TAG = "MjpegView";
@@ -47,7 +47,11 @@ public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
     private int displayMode;
     
     private Context context;
-    Rect b2 = new Rect();
+    
+    Rect arrowUpRect = new Rect();
+    Rect arrowDownRect = new Rect();
+    Rect arrowLeftRect = new Rect();
+    Rect arrowRightRect = new Rect();
     
     
 
@@ -56,7 +60,11 @@ public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
         private int frameCounter = 0;
         private long start;
         private Bitmap ovl;
-        private Bitmap bitmap;
+        
+        private Bitmap arrowUp;
+        private Bitmap arrowDown;
+        private Bitmap arrowLeft;
+        private Bitmap arrowRight;
         
 
         public MjpegViewThread(SurfaceHolder surfaceHolder, Context context) {
@@ -110,17 +118,59 @@ public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
             return bm;
         }
         
-        private Bitmap makeBitmapOverlay() {
+        private Bitmap makeArrowUpOverlay() {
           
             Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.led_on);
             Bitmap mutableBitmap = bm.copy(Bitmap.Config.ARGB_8888, true);
             Canvas c = new Canvas(mutableBitmap);
             Paint p = new Paint();
             c.drawRect(0, 0, bm.getWidth(), bm.getHeight(), p);
-            b2.left = 0;
-            b2.top = 0;
-            b2.right = bm.getWidth();
-            b2.bottom = bm.getHeight();
+            arrowUpRect.left = mSurfaceHolder.getSurfaceFrame().width()/2 - bm.getWidth();
+            arrowUpRect.top = 0;
+            arrowUpRect.right = mSurfaceHolder.getSurfaceFrame().width()/2 + bm.getWidth();
+            arrowUpRect.bottom = bm.getHeight();
+            return bm;
+        }
+        
+        private Bitmap makeArrowDownOverlay() {
+            
+            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.led_on);
+            Bitmap mutableBitmap = bm.copy(Bitmap.Config.ARGB_8888, true);
+            Canvas c = new Canvas(mutableBitmap);
+            Paint p = new Paint();
+            c.drawRect(0, 0, bm.getWidth(), bm.getHeight(), p);
+            arrowDownRect.left = mSurfaceHolder.getSurfaceFrame().width()/2 - bm.getWidth();
+            arrowDownRect.top = mSurfaceHolder.getSurfaceFrame().height() - bm.getHeight();
+            arrowDownRect.right = mSurfaceHolder.getSurfaceFrame().width()/2 + bm.getWidth();
+            arrowDownRect.bottom = mSurfaceHolder.getSurfaceFrame().height();
+            return bm;
+        }
+        
+        private Bitmap makeArrowLeftOverlay() {
+            
+            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.led_on);
+            Bitmap mutableBitmap = bm.copy(Bitmap.Config.ARGB_8888, true);
+            Canvas c = new Canvas(mutableBitmap);
+            Paint p = new Paint();
+            c.drawRect(0, 0, bm.getWidth(), bm.getHeight(), p);
+            arrowLeftRect.left = 0;
+            arrowLeftRect.top = mSurfaceHolder.getSurfaceFrame().height()/2 - bm.getHeight();
+            arrowLeftRect.right = bm.getWidth();
+            arrowLeftRect.bottom = mSurfaceHolder.getSurfaceFrame().height()/2 + bm.getHeight();
+            return bm;
+        }
+        
+        private Bitmap makeArrowRightOverlay() {
+            
+            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.led_on);
+            Bitmap mutableBitmap = bm.copy(Bitmap.Config.ARGB_8888, true);
+            Canvas c = new Canvas(mutableBitmap);
+            Paint p = new Paint();
+            c.drawRect(0, 0, bm.getWidth(), bm.getHeight(), p);
+            arrowRightRect.left = mSurfaceHolder.getSurfaceFrame().width() - bm.getWidth();
+            arrowRightRect.top = mSurfaceHolder.getSurfaceFrame().height()/2 - bm.getHeight();
+            arrowRightRect.right = mSurfaceHolder.getSurfaceFrame().width();
+            arrowRightRect.bottom = mSurfaceHolder.getSurfaceFrame().height()/2 + bm.getHeight();
             return bm;
         }
 
@@ -150,7 +200,11 @@ public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
                                         height = ((ovlPos & 1) == 1) ? destRect.top : destRect.bottom - ovl.getHeight();
                                         width = ((ovlPos & 8) == 8) ? destRect.left : destRect.right - ovl.getWidth();
                                         c.drawBitmap(ovl, width, height, null);
-                                        c.drawBitmap(bitmap, destRect.top/2, destRect.left/2, null);
+                                        
+                                        c.drawBitmap(arrowUp,mSurfaceHolder.getSurfaceFrame().width()/2 - arrowUp.getWidth()/2, 0, null);
+                                        c.drawBitmap(arrowDown,mSurfaceHolder.getSurfaceFrame().width()/2 - arrowDown.getWidth()/2 , mSurfaceHolder.getSurfaceFrame().height()-arrowDown.getHeight(), null);
+                                        c.drawBitmap(arrowLeft,0, mSurfaceHolder.getSurfaceFrame().height()/2-arrowLeft.getHeight()/2, null);
+                                        c.drawBitmap(arrowRight,mSurfaceHolder.getSurfaceFrame().width() - arrowRight.getWidth(),mSurfaceHolder.getSurfaceFrame().height()/2-arrowRight.getHeight()/2, null);
                                     }
                                     p.setXfermode(null);
                                     frameCounter++;
@@ -159,7 +213,11 @@ public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
                                         frameCounter = 0;
                                         start = System.currentTimeMillis();
                                         ovl = makeFpsOverlay(overlayPaint, fps);
-                                        bitmap = makeBitmapOverlay();
+                                        
+                                        arrowUp = makeArrowUpOverlay();
+                                        arrowDown = makeArrowDownOverlay();
+                                        arrowLeft = makeArrowLeftOverlay();
+                                        arrowRight = makeArrowRightOverlay();
                                     }
                                 }
                             } catch (IOException e) {
@@ -180,15 +238,26 @@ public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        
+
 
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
 
             int x = (int) event.getX();
             int y = (int) event.getY();
-            if(b2.contains(x, y)){
-                Log.d("CLICK", "CLICK");
-            }else{
-                Log.d("NOT", "NOT");
+            
+            if(arrowUpRect.contains(x, y)){
+                MoveCameraTask mcTask = new MoveCameraTask("up");
+                mcTask.execute((Void)null);
+            }else if(arrowDownRect.contains(x, y)){
+                MoveCameraTask mcTask = new MoveCameraTask("down");
+                mcTask.execute((Void)null);
+            }else if(arrowLeftRect.contains(x, y)){
+                MoveCameraTask mcTask = new MoveCameraTask("left");
+                mcTask.execute((Void)null);
+            }else if(arrowRightRect.contains(x, y)){
+                MoveCameraTask mcTask = new MoveCameraTask("right");
+                mcTask.execute((Void)null);
             }
             
             
