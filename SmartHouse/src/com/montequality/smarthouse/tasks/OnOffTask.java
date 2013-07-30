@@ -92,12 +92,12 @@ public class OnOffTask extends AsyncTask<Void, Void, String> {
         List<Integer> tempDrawRight = adapter.getDrawableIntRight();
 
         if (params.equalsIgnoreCase("true")) {
-            message = activity.getResources().getString(R.string.light_on).concat(room);
+            message = activity.getResources().getString(R.string.light_on).concat(": " + room);
 
         } else if (params.equalsIgnoreCase("false")) {
-            message = activity.getResources().getString(R.string.light_off).concat(room);
+            message = activity.getResources().getString(R.string.light_off).concat(": " + room);
         } else {
-            message = activity.getResources().getString(R.string.light_error).concat(room);
+            message = activity.getResources().getString(R.string.light_error).concat(": " + room);
         }
 
         if (tempDrawRight.get(positionInList).equals(R.drawable.lightbuble_right_on)) {
@@ -122,12 +122,12 @@ public class OnOffTask extends AsyncTask<Void, Void, String> {
         List<Integer> tempDrawRight = adapter.getDrawableIntRight();
 
         if (params.equalsIgnoreCase("true")) {
-            message = activity.getResources().getString(R.string.light_on).concat(room);
+            message = activity.getResources().getString(R.string.light_on).concat(": " + room);
 
         } else if (params.equalsIgnoreCase("false")) {
-            message = activity.getResources().getString(R.string.light_off).concat(room);
+            message = activity.getResources().getString(R.string.light_off).concat(": " + room);
         } else {
-            message = activity.getResources().getString(R.string.light_error).concat(room);
+            message = activity.getResources().getString(R.string.light_error).concat(": " + room);
         }
 
         if (tempDrawRight.get(positionInList).equals(R.drawable.led_on)) {

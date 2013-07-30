@@ -83,6 +83,46 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.montequality.smarthouse.MainDevicesListActivity" />
         </activity>
+        <activity
+            android:name="com.montequality.smarthouse.TVList"
+            android:label="@string/title_activity_tvlist"
+            android:parentActivityName="com.montequality.smarthouse.MainDevicesListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.montequality.smarthouse.MainDevicesListActivity" />
+        </activity>
+        <activity
+            android:name="com.montequality.smarthouse.AirconditionList"
+            android:label="@string/title_activity_aircondition_list"
+            android:parentActivityName="com.montequality.smarthouse.MainDevicesListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.montequality.smarthouse.MainDevicesListActivity" />
+        </activity>
+        <activity
+            android:name="com.montequality.smarthouse.CameraList"
+            android:label="@string/title_activity_camera_list"
+            android:parentActivityName="com.montequality.smarthouse.MainDevicesListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.montequality.smarthouse.MainDevicesListActivity" />
+        </activity>
+        <activity
+            android:name="com.montequality.smarthouse.WindowBlindsList"
+            android:label="@string/title_activity_window_blinds_list"
+            android:parentActivityName="com.montequality.smarthouse.MainDevicesListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.montequality.smarthouse.MainDevicesListActivity" />
+        </activity>
+        <activity
+            android:name="com.montequality.smarthouse.RemoteTV"
+            android:label="@string/title_activity_remote_tv"
+            android:parentActivityName="com.montequality.smarthouse.MainDevicesListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.montequality.smarthouse.MainDevicesListActivity" />
+        </activity>
     </application>
 
 </manifest>

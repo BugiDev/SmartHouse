@@ -33,10 +33,10 @@ public class MjpegActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
         WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        mv = new MjpegView(this);
+        mv = new MjpegView(this, URL);
         setContentView(mv);        
 
-        new DoRead().execute(URL);
+        new DoRead().execute(URL + "videostream.cgi?user=admin&pwd=");
     }
 
     public void onPause() {

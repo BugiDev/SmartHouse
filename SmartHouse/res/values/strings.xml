@@ -13,5 +13,10 @@
     <string name="performing_action_title">Performing action&#8230;</string>
     <string name="title_activity_boiler_list">List of all boilers</string>
     <string name="title_activity_mjpeg">MjpegActivity</string>
+    <string name="title_activity_tvlist">TVList</string>
+    <string name="title_activity_aircondition_list">Airconditions</string>
+    <string name="title_activity_camera_list">Cameras</string>
+    <string name="title_activity_window_blinds_list">Window Blinds</string>
+    <string name="title_activity_remote_tv">Remote for TV</string>
 
 </resources>

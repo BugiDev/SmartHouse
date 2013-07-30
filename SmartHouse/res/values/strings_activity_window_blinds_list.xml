@@ -1,0 +1,7 @@
+<resources>
+
+    <!-- Home menu -->
+    <string name="window_blinds_up">Window Blinds going up in room </string>
+    <string name="window_blinds_down">Window Blinds going down in room </string>
+    <string name="window_blinds_error">There was an error changing direction of window blinds in room </string>
+</resources>

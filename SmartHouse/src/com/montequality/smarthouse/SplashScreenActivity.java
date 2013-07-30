@@ -1,5 +1,7 @@
 package com.montequality.smarthouse;
 
+import java.util.concurrent.ExecutionException;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -87,11 +89,19 @@ public class SplashScreenActivity extends Activity {
 
 		CheckInternetTask checkInternet = new CheckInternetTask(this);
 		
-		checkInternet.execute((Void) null);
+		try {
+			if(checkInternet.execute((Void) null).get()){
+				AuthenticateFromPrefsTask authFromPrefs = new AuthenticateFromPrefsTask(this, getSharedPrefs().getPreferences().getString("username", null), getSharedPrefs().getPreferences().getString("password", null));
+				authFromPrefs.execute((Void)null);
+			}
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		AuthenticateFromPrefsTask authFromPrefs = new AuthenticateFromPrefsTask(this, getSharedPrefs().getPreferences().getString("username", null), getSharedPrefs().getPreferences().getString("password", null));
-	
-		authFromPrefs.execute((Void)null);
 	}
 
 	@Override

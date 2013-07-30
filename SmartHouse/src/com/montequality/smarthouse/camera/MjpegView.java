@@ -46,14 +46,12 @@ public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
     private int dispHeight;
     private int displayMode;
     
-    private Context context;
-    
     Rect arrowUpRect = new Rect();
     Rect arrowDownRect = new Rect();
     Rect arrowLeftRect = new Rect();
     Rect arrowRightRect = new Rect();
     
-    
+    String cameraHostURL;
 
     public class MjpegViewThread extends Thread {
         private SurfaceHolder mSurfaceHolder;
@@ -120,7 +118,7 @@ public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
         
         private Bitmap makeArrowUpOverlay() {
           
-            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.led_on);
+            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.arrow_up_camera);
             Bitmap mutableBitmap = bm.copy(Bitmap.Config.ARGB_8888, true);
             Canvas c = new Canvas(mutableBitmap);
             Paint p = new Paint();
@@ -134,7 +132,7 @@ public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
         
         private Bitmap makeArrowDownOverlay() {
             
-            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.led_on);
+            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.arrow_down_camera);
             Bitmap mutableBitmap = bm.copy(Bitmap.Config.ARGB_8888, true);
             Canvas c = new Canvas(mutableBitmap);
             Paint p = new Paint();
@@ -148,7 +146,7 @@ public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
         
         private Bitmap makeArrowLeftOverlay() {
             
-            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.led_on);
+            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.arrow_left_camera);
             Bitmap mutableBitmap = bm.copy(Bitmap.Config.ARGB_8888, true);
             Canvas c = new Canvas(mutableBitmap);
             Paint p = new Paint();
@@ -162,7 +160,7 @@ public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
         
         private Bitmap makeArrowRightOverlay() {
             
-            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.led_on);
+            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.arrow_right_camera);
             Bitmap mutableBitmap = bm.copy(Bitmap.Config.ARGB_8888, true);
             Canvas c = new Canvas(mutableBitmap);
             Paint p = new Paint();
@@ -247,16 +245,16 @@ public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
             int y = (int) event.getY();
             
             if(arrowUpRect.contains(x, y)){
-                MoveCameraTask mcTask = new MoveCameraTask("up");
+                MoveCameraTask mcTask = new MoveCameraTask("up", cameraHostURL);
                 mcTask.execute((Void)null);
             }else if(arrowDownRect.contains(x, y)){
-                MoveCameraTask mcTask = new MoveCameraTask("down");
+                MoveCameraTask mcTask = new MoveCameraTask("down", cameraHostURL);
                 mcTask.execute((Void)null);
             }else if(arrowLeftRect.contains(x, y)){
-                MoveCameraTask mcTask = new MoveCameraTask("left");
+                MoveCameraTask mcTask = new MoveCameraTask("left", cameraHostURL);
                 mcTask.execute((Void)null);
             }else if(arrowRightRect.contains(x, y)){
-                MoveCameraTask mcTask = new MoveCameraTask("right");
+                MoveCameraTask mcTask = new MoveCameraTask("right", cameraHostURL);
                 mcTask.execute((Void)null);
             }
             
@@ -308,7 +306,6 @@ public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
     public MjpegView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
-        this.context = context;
     }
 
     public void surfaceChanged(SurfaceHolder holder, int f, int w, int h) {
@@ -320,9 +317,11 @@ public class MjpegView extends SurfaceView implements SurfaceHolder.Callback {
         stopPlayback();
     }
 
-    public MjpegView(Context context) {
+    public MjpegView(Context context, String cameraHostURL) {
         super(context);
+        this.cameraHostURL = cameraHostURL;
         init(context);
+        
     }
 
     public void surfaceCreated(SurfaceHolder holder) {

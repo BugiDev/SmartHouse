@@ -5,7 +5,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -17,24 +16,23 @@ public class MoveCameraTask extends AsyncTask<Void, Void, Void>{
 
     String path;
     String direction;
+    String cameraHostURL;
     
-    public MoveCameraTask(String direction) {
+    public MoveCameraTask(String direction, String cameraHostURL) {
         this.direction = direction;
+        this.cameraHostURL = cameraHostURL;
     }
     
     @Override
     protected Void doInBackground(Void... params) {
-        setPath();
+        setPath(cameraHostURL);
         try {
             
             URI uri = new URI(path);
-            
-            
-
             HttpClient httpclient = new DefaultHttpClient();
             HttpGet httpGet = new HttpGet(uri);
 
-            HttpResponse response = httpclient.execute(httpGet);
+            httpclient.execute(httpGet);
 
 
         } // TODO: register the new account here.
@@ -56,15 +54,15 @@ public class MoveCameraTask extends AsyncTask<Void, Void, Void>{
         
     }
     
-    private void setPath(){
+    private void setPath(String cameraHostURL){
         if(direction.equalsIgnoreCase("up")){
-            path = "http://192.168.1.8/decoder_control.cgi?command=0&degree=20&onestep=1&user=admin&pwd=";
+            path =  cameraHostURL+ "decoder_control.cgi?command=0&degree=20&onestep=1&user=admin&pwd=";
         }else  if(direction.equalsIgnoreCase("down")){
-            path = "http://192.168.1.8/decoder_control.cgi?command=2&degree=20&onestep=1&user=admin&pwd=";
+            path =  cameraHostURL+ "decoder_control.cgi?command=2&degree=20&onestep=1&user=admin&pwd=";
         }else  if(direction.equalsIgnoreCase("left")){
-            path = "http://192.168.1.8/decoder_control.cgi?command=6&degree=20&onestep=1&user=admin&pwd=";
+            path =  cameraHostURL+ "decoder_control.cgi?command=6&degree=20&onestep=1&user=admin&pwd=";
         }else  if(direction.equalsIgnoreCase("right")){
-            path = "http://192.168.1.8/decoder_control.cgi?command=4&degree=20&onestep=1&user=admin&pwd=";
+            path =  cameraHostURL+ "decoder_control.cgi?command=4&degree=20&onestep=1&user=admin&pwd=";
         }
     }
 
