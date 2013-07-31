@@ -9,6 +9,7 @@ import org.apache.http.message.BasicNameValuePair;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.montequality.smarthouse.R;
@@ -28,12 +29,11 @@ public class RemoteControllTask extends AsyncTask<Void, Void, String> {
 	// TODO Auto-generated constructor stub
     }
 
-    public RemoteControllTask(Activity activity, int deviceID, String actionType, TextView textView, int changingValue) {
+    public RemoteControllTask(Activity activity, int deviceID, String actionType, TextView textView) {
 	this.activity = activity;
 	this.deviceID = deviceID;
 	this.actionType = actionType;
 	this.textView = textView;
-	this.changingValue = changingValue;
     }
 
     @Override
@@ -72,17 +72,17 @@ public class RemoteControllTask extends AsyncTask<Void, Void, String> {
 	
 	if (!params.equalsIgnoreCase("sranje")) {
 	    if (actionType.equalsIgnoreCase("volumeUp")) {
-		turnVolumeUp();
+		turnVolumeUp(params);
 	    } else if (actionType.equalsIgnoreCase("volumeDown")) {
-		turnVolumeDown();
+		turnVolumeDown(params);
 	    } else if (actionType.equalsIgnoreCase("channelUp")) {
-		turnChannelUp();
+		turnChannelUp(params);
 	    } else if (actionType.equalsIgnoreCase("channelDown")) {
-		turnChannelDown();
+		turnChannelDown(params);
 	    } else if (actionType.equalsIgnoreCase("temperatureUp")) {
-		turnTemperatureUp();
+		turnTemperatureUp(params);
 	    } else if (actionType.equalsIgnoreCase("temperatureDown")) {
-		turnTemperatureDown();
+		turnTemperatureDown(params);
 	    }
 	}
 	
@@ -90,34 +90,35 @@ public class RemoteControllTask extends AsyncTask<Void, Void, String> {
 
     }
 
-    private void turnVolumeUp() {
+    private void turnVolumeUp(String params) {
 	changingValue++;
-	textView.setText(activity.getResources().getString(R.string.remote_tv_volume) + " " + changingValue);
+	Log.d("SRANJE", Integer.toString(changingValue));
+	textView.setText(activity.getResources().getString(R.string.remote_tv_volume) + " " + params);
     }
 
-    private void turnVolumeDown() {
+    private void turnVolumeDown(String params) {
 	changingValue--;
-	textView.setText(activity.getResources().getString(R.string.remote_tv_volume) + " " + changingValue);
+	textView.setText(activity.getResources().getString(R.string.remote_tv_volume) + " " + params);
     }
 
-    private void turnChannelUp() {
+    private void turnChannelUp(String params) {
 	changingValue++;
-	textView.setText(activity.getResources().getString(R.string.remote_tv_channel) + " " + changingValue);
+	textView.setText(activity.getResources().getString(R.string.remote_tv_channel) + " " + params);
     }
 
-    private void turnChannelDown() {
+    private void turnChannelDown(String params) {
 	changingValue--;
-	textView.setText(activity.getResources().getString(R.string.remote_tv_channel) + " " + changingValue);
+	textView.setText(activity.getResources().getString(R.string.remote_tv_channel) + " " + params);
     }
 
-    private void turnTemperatureUp() {
+    private void turnTemperatureUp(String params) {
 	changingValue++;
-	textView.setText(activity.getResources().getString(R.string.remote_air_temperature) + " " + changingValue);
+	textView.setText(activity.getResources().getString(R.string.remote_air_temperature) + " " + params);
     }
 
-    private void turnTemperatureDown() {
+    private void turnTemperatureDown(String params) {
 	changingValue--;
-	textView.setText(activity.getResources().getString(R.string.remote_air_temperature) + " " + changingValue);
+	textView.setText(activity.getResources().getString(R.string.remote_air_temperature) + " " + params);
     }
 
     public void prepDialog() {

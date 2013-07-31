@@ -1,6 +1,9 @@
 package com.montequality.smarthouse;
 
+import java.util.concurrent.ExecutionException;
+
 import com.montequality.smarthouse.entity.TV;
+import com.montequality.smarthouse.tasks.GetRemoteParamsTask;
 import com.montequality.smarthouse.tasks.OnOffTask;
 import com.montequality.smarthouse.tasks.RemoteControllTask;
 import com.montequality.smarthouse.util.SharedPrefs;
@@ -36,8 +39,12 @@ public class RemoteTV extends Activity {
     private SharedPrefs sharedPrefs;
     private SoundAndVibration soundAndVibra;
     
+    private int channel;
+    private int volume;
+    
     OnOffTask onOffTask;
     RemoteControllTask remoteControllTask;
+    GetRemoteParamsTask getRemoteParamsTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +54,43 @@ public class RemoteTV extends Activity {
 	setupActionBar();
 	intialize();
 	
+	if(tv.isPower()){
+		powerBtn.setImageDrawable(getResources().getDrawable(R.drawable.led_on));
+	}else{
+		powerBtn.setImageDrawable(getResources().getDrawable(R.drawable.led_off));
+	}
+	
+	getRemoteParamsTask = new GetRemoteParamsTask(tv.getId(), "volume", this);
+	try {
+		volume = Integer.parseInt(getRemoteParamsTask.execute((Void)null).get());
+	} catch (NumberFormatException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (ExecutionException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+	getRemoteParamsTask = new GetRemoteParamsTask(tv.getId(), "channel", this);
+	try {
+		channel = Integer.parseInt(getRemoteParamsTask.execute((Void)null).get());
+	} catch (NumberFormatException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (ExecutionException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
 	roomText.setText(getResources().getString(R.string.remote_tv_room) + " " + tv.getRoom());
-	channelText.setText(getResources().getString(R.string.remote_tv_channel) + " " + tv.getChannel());
-	volumeText.setText(getResources().getString(R.string.remote_tv_volume) + " " + tv.getVolume());
+	channelText.setText(getResources().getString(R.string.remote_tv_channel) + " " + channel);
+	volumeText.setText(getResources().getString(R.string.remote_tv_volume) + " " + volume);
 
 	sharedPrefs = new SharedPrefs(this);
 	soundAndVibra = new SoundAndVibration(sharedPrefs, this);
@@ -69,7 +110,7 @@ public class RemoteTV extends Activity {
 	    @Override
 	    public void onClick(View v) {
 		soundAndVibra.playSoundAndVibra();
-		remoteControllTask = new RemoteControllTask(RemoteTV.this, tv.getId(), "channelUp", channelText, tv.getChannel());
+		remoteControllTask = new RemoteControllTask(RemoteTV.this, tv.getId(), "channelUp", channelText);
 		remoteControllTask.execute((Void)null);
 		
 	    }
@@ -80,7 +121,7 @@ public class RemoteTV extends Activity {
 	    @Override
 	    public void onClick(View v) {
 		soundAndVibra.playSoundAndVibra();
-		remoteControllTask = new RemoteControllTask(RemoteTV.this, tv.getId(), "channelDown", channelText, tv.getChannel());
+		remoteControllTask = new RemoteControllTask(RemoteTV.this, tv.getId(), "channelDown", channelText);
 		remoteControllTask.execute((Void)null);
 		
 	    }
@@ -91,7 +132,7 @@ public class RemoteTV extends Activity {
 	    @Override
 	    public void onClick(View v) {
 		soundAndVibra.playSoundAndVibra();
-		remoteControllTask = new RemoteControllTask(RemoteTV.this, tv.getId(), "volumeUp", volumeText, tv.getVolume());
+		remoteControllTask = new RemoteControllTask(RemoteTV.this, tv.getId(), "volumeUp", volumeText);
 		remoteControllTask.execute((Void)null);
 		
 	    }
@@ -102,7 +143,7 @@ public class RemoteTV extends Activity {
 	    @Override
 	    public void onClick(View v) {
 		soundAndVibra.playSoundAndVibra();
-		remoteControllTask = new RemoteControllTask(RemoteTV.this, tv.getId(), "volumeDown", volumeText, tv.getVolume());
+		remoteControllTask = new RemoteControllTask(RemoteTV.this, tv.getId(), "volumeDown", volumeText);
 		remoteControllTask.execute((Void)null);
 		
 	    }

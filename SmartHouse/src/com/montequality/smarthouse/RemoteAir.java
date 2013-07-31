@@ -1,6 +1,9 @@
 package com.montequality.smarthouse;
 
+import java.util.concurrent.ExecutionException;
+
 import com.montequality.smarthouse.entity.Aircondition;
+import com.montequality.smarthouse.tasks.GetRemoteParamsTask;
 import com.montequality.smarthouse.tasks.OnOffTask;
 import com.montequality.smarthouse.tasks.RemoteControllTask;
 import com.montequality.smarthouse.util.SharedPrefs;
@@ -31,10 +34,14 @@ public class RemoteAir extends Activity {
 
     private SharedPrefs sharedPrefs;
     private SoundAndVibration soundAndVibra;
+    
+    private String mode;
+    private int temperature;
 
     OnOffTask onOffTask;
     
     RemoteControllTask remoteControllTask;
+    GetRemoteParamsTask getRemoteParamsTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +51,43 @@ public class RemoteAir extends Activity {
 	setupActionBar();
 	intialize();
 	
+	if(aircondition.isPower()){
+		powerBtn.setImageDrawable(getResources().getDrawable(R.drawable.led_on));
+	}else{
+		powerBtn.setImageDrawable(getResources().getDrawable(R.drawable.led_off));
+	}
+	
+	getRemoteParamsTask = new GetRemoteParamsTask(aircondition.getId(), "mode", this);
+	try {
+		mode = getRemoteParamsTask.execute((Void)null).get();
+	} catch (NumberFormatException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (ExecutionException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+	getRemoteParamsTask = new GetRemoteParamsTask(aircondition.getId(), "temperature", this);
+	try {
+		temperature = Integer.parseInt(getRemoteParamsTask.execute((Void)null).get());
+	} catch (NumberFormatException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (ExecutionException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
 	roomText.setText(getResources().getString(R.string.remote_air_room) + " " + aircondition.getRoom());
-	modeText.setText(getResources().getString(R.string.remote_air_mode) + " " + aircondition.getMode());
-	temperatureText.setText(getResources().getString(R.string.remote_air_temperature) + " " + aircondition.getTemperature());
+	modeText.setText(getResources().getString(R.string.remote_air_mode) + " " + mode);
+	temperatureText.setText(getResources().getString(R.string.remote_air_temperature) + " " + temperature);
 
 	sharedPrefs = new SharedPrefs(this);
 	soundAndVibra = new SoundAndVibration(sharedPrefs, this);
@@ -66,7 +107,7 @@ public class RemoteAir extends Activity {
 	    @Override
 	    public void onClick(View v) {
 		soundAndVibra.playSoundAndVibra();
-		remoteControllTask = new RemoteControllTask(RemoteAir.this, aircondition.getId(), "temperatureUp", temperatureText, aircondition.getTemperature());
+		remoteControllTask = new RemoteControllTask(RemoteAir.this, aircondition.getId(), "temperatureUp", temperatureText);
 		remoteControllTask.execute((Void)null);
 	    }
 	});
@@ -76,7 +117,7 @@ public class RemoteAir extends Activity {
 	    @Override
 	    public void onClick(View v) {
 		soundAndVibra.playSoundAndVibra();
-		remoteControllTask = new RemoteControllTask(RemoteAir.this, aircondition.getId(), "temperatureDown", temperatureText, aircondition.getTemperature());
+		remoteControllTask = new RemoteControllTask(RemoteAir.this, aircondition.getId(), "temperatureDown", temperatureText);
 		remoteControllTask.execute((Void)null);
 	    }
 	});
