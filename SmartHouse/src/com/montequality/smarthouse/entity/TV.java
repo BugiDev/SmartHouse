@@ -6,14 +6,14 @@ public class TV {
 	private int id;
 	private boolean power;
 	private String room;
-	private int chanell;
+	private int channel;
 	private int volume;
 	
-	public TV(int id, boolean power, String room, int chanell, int volume) {
+	public TV(int id, boolean power, String room, int channel, int volume) {
 		this.setId(id);
 		this.setPower(power);
 		this.setRoom(room);
-		this.setChanell(chanell);
+		this.setChannel(channel);
 		this.setVolume(volume);
 	}
 	
@@ -45,12 +45,12 @@ public class TV {
 		this.room = room;
 	}
 
-	public int getChanell() {
-		return chanell;
+	public int getChannel() {
+		return channel;
 	}
 
-	public void setChanell(int chanell) {
-		this.chanell = chanell;
+	public void setChannel(int channel) {
+		this.channel = channel;
 	}
 
 	public int getVolume() {

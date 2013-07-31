@@ -69,9 +69,6 @@ public class HomeActivity extends Activity {
 
 		showToastMessage();
 
-		Intent intent = new Intent(HomeActivity.this, RemoteTV.class);
-		startActivity(intent);
-
 	    }
 	});
 

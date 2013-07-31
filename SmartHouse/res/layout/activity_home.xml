@@ -54,7 +54,7 @@
     </RelativeLayout>
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/remote_air_text_mode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/relativeLayout1"
@@ -78,7 +78,7 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_above="@+id/textView4"
-        android:layout_alignRight="@+id/textView1"
+        android:layout_alignRight="@+id/remote_air_text_room"
         android:src="@drawable/settings"
         android:contentDescription="@string/settings_desc"  />
 
@@ -86,13 +86,13 @@
         android:id="@+id/info_button"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_alignLeft="@+id/textView2"
+        android:layout_alignLeft="@+id/remote_air_text_mode"
         android:layout_below="@+id/relativeLayout1"
         android:src="@drawable/about"
         android:contentDescription="@string/info_desc"  />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/remote_air_text_temperature"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/textView4"
@@ -103,11 +103,11 @@
         android:textColor="@color/blue" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/remote_air_text_room"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView2"
-        android:layout_alignBottom="@+id/textView2"
+        android:layout_alignBaseline="@+id/remote_air_text_mode"
+        android:layout_alignBottom="@+id/remote_air_text_mode"
         android:layout_toLeftOf="@+id/relativeLayout1"
         android:text="@string/devices"
         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -117,8 +117,8 @@
         android:id="@+id/premade_mods_button"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_above="@+id/textView2"
-        android:layout_alignLeft="@+id/textView2"
+        android:layout_above="@+id/remote_air_text_mode"
+        android:layout_alignLeft="@+id/remote_air_text_mode"
         android:src="@drawable/premade_mods"
         android:contentDescription="@string/premade_mods_desc"  />
 

@@ -18,5 +18,6 @@
     <string name="title_activity_camera_list">Cameras</string>
     <string name="title_activity_window_blinds_list">Window Blinds</string>
     <string name="title_activity_remote_tv">Remote for TV</string>
+    <string name="title_activity_remote_air">Aircondition remote controller</string>
 
 </resources>

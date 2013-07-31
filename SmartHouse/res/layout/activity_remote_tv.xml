@@ -77,7 +77,7 @@
         android:layout_alignBottom="@+id/tv_remote_text_channel"
         android:layout_alignLeft="@+id/tv_remote_v_down"
         android:text="@string/remote_tv_volume"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/blue" />
 
     <TextView
@@ -88,7 +88,7 @@
         android:layout_below="@+id/tv_remote_ch_down"
         android:layout_marginTop="30dp"
         android:text="@string/remote_tv_channel"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/blue" />
 
 </RelativeLayout>

@@ -128,8 +128,14 @@ public class MainDevicesListActivity extends ListActivity {
 		startActivity(intent);
 
 	    } else if (tvList.size() == 1) {
-		// TODO turn on remote
-		showToastMessage("OVDE IDE REMOTE");
+		
+		Intent intent = new Intent(this, RemoteTV.class);
+		intent.putExtra("tvID", tvList.get(0).getId());
+		intent.putExtra("room", tvList.get(0).getRoom());
+		intent.putExtra("power", tvList.get(0).isPower());
+		intent.putExtra("channel", tvList.get(0).getChannel());
+		intent.putExtra("volume", tvList.get(0).getVolume());
+		startActivity(intent);
 
 	    }
 	} else if (item.equalsIgnoreCase("Aircondition")) {
@@ -139,8 +145,13 @@ public class MainDevicesListActivity extends ListActivity {
 		intent.putExtra("jsonDevices", getIntent().getStringExtra("jsonDevices"));
 		startActivity(intent);
 	    } else if (airconditionList.size() == 1) {
-		// TODO turn on remote
-		showToastMessage("OVDE IDE REMOTE");
+		Intent intent = new Intent(this, RemoteAir.class);
+		intent.putExtra("airID", airconditionList.get(0).getId());
+		intent.putExtra("mode", airconditionList.get(0).getMode());
+		intent.putExtra("room", airconditionList.get(0).getRoom());
+		intent.putExtra("temperature", airconditionList.get(0).getTemperature());
+		intent.putExtra("power", airconditionList.get(0).isPower());
+		startActivity(intent);
 	    }
 
 	} else if (item.equalsIgnoreCase("Window blinds")) {

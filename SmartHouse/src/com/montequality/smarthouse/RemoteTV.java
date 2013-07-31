@@ -1,14 +1,43 @@
 package com.montequality.smarthouse;
 
+import com.montequality.smarthouse.entity.TV;
+import com.montequality.smarthouse.tasks.OnOffTask;
+import com.montequality.smarthouse.tasks.RemoteControllTask;
+import com.montequality.smarthouse.util.SharedPrefs;
+import com.montequality.smarthouse.util.SoundAndVibration;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.support.v4.app.NavUtils;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.annotation.TargetApi;
 import android.os.Build;
+import android.view.View.OnClickListener;
 
 public class RemoteTV extends Activity {
+
+    private ImageButton powerBtn;
+
+    private ImageButton channelUpBtn;
+    private ImageButton channelDownBtn;
+
+    private ImageButton volumeUpBtn;
+    private ImageButton volumeDownBtn;
+
+    private TextView roomText;
+    private TextView channelText;
+    private TextView volumeText;
+
+    private TV tv = new TV();
+
+    private SharedPrefs sharedPrefs;
+    private SoundAndVibration soundAndVibra;
+    
+    OnOffTask onOffTask;
+    RemoteControllTask remoteControllTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,6 +45,70 @@ public class RemoteTV extends Activity {
 	setContentView(R.layout.activity_remote_tv);
 	// Show the Up button in the action bar.
 	setupActionBar();
+	intialize();
+	
+	roomText.setText(getResources().getString(R.string.remote_tv_room) + " " + tv.getRoom());
+	channelText.setText(getResources().getString(R.string.remote_tv_channel) + " " + tv.getChannel());
+	volumeText.setText(getResources().getString(R.string.remote_tv_volume) + " " + tv.getVolume());
+
+	sharedPrefs = new SharedPrefs(this);
+	soundAndVibra = new SoundAndVibration(sharedPrefs, this);
+	
+	powerBtn.setOnClickListener(new OnClickListener() {
+	    
+	    @Override
+	    public void onClick(View v) {
+		soundAndVibra.playSoundAndVibra();
+		onOffTask = new OnOffTask(RemoteTV.this, tv.getId(), "TV", tv.getRoom(), powerBtn);
+		onOffTask.execute((Void) null);
+	    }
+	});
+	
+	channelUpBtn.setOnClickListener(new OnClickListener() {
+	    
+	    @Override
+	    public void onClick(View v) {
+		soundAndVibra.playSoundAndVibra();
+		remoteControllTask = new RemoteControllTask(RemoteTV.this, tv.getId(), "channelUp", channelText, tv.getChannel());
+		remoteControllTask.execute((Void)null);
+		
+	    }
+	});
+	
+	channelDownBtn.setOnClickListener(new OnClickListener() {
+	    
+	    @Override
+	    public void onClick(View v) {
+		soundAndVibra.playSoundAndVibra();
+		remoteControllTask = new RemoteControllTask(RemoteTV.this, tv.getId(), "channelDown", channelText, tv.getChannel());
+		remoteControllTask.execute((Void)null);
+		
+	    }
+	});
+	
+	volumeUpBtn.setOnClickListener(new OnClickListener() {
+	    
+	    @Override
+	    public void onClick(View v) {
+		soundAndVibra.playSoundAndVibra();
+		remoteControllTask = new RemoteControllTask(RemoteTV.this, tv.getId(), "volumeUp", volumeText, tv.getVolume());
+		remoteControllTask.execute((Void)null);
+		
+	    }
+	});
+	
+	volumeDownBtn.setOnClickListener(new OnClickListener() {
+	    
+	    @Override
+	    public void onClick(View v) {
+		soundAndVibra.playSoundAndVibra();
+		remoteControllTask = new RemoteControllTask(RemoteTV.this, tv.getId(), "volumeDown", volumeText, tv.getVolume());
+		remoteControllTask.execute((Void)null);
+		
+	    }
+	});
+	
+	
     }
 
     /**
@@ -46,10 +139,31 @@ public class RemoteTV extends Activity {
 	    //
 	    // http://developer.android.com/design/patterns/navigation.html#up-vs-back
 	    //
-	    NavUtils.navigateUpFromSameTask(this);
+	    onBackPressed();
 	    return true;
 	}
 	return super.onOptionsItemSelected(item);
+    }
+
+    public void intialize() {
+	powerBtn = (ImageButton) findViewById(R.id.tv_remote_power);
+	
+	channelUpBtn = (ImageButton) findViewById(R.id.tv_remote_ch_up);
+	channelDownBtn = (ImageButton) findViewById(R.id.tv_remote_ch_down);
+
+	volumeUpBtn = (ImageButton) findViewById(R.id.tv_remote_v_up);
+	volumeDownBtn = (ImageButton) findViewById(R.id.tv_remote_v_down);
+
+	roomText = (TextView) findViewById(R.id.tv_remote_text_room);
+	channelText = (TextView) findViewById(R.id.tv_remote_text_channel);
+	volumeText = (TextView) findViewById(R.id.tv_remote_text_volume);
+
+	tv.setId(getIntent().getIntExtra("tvID", -1));
+	tv.setRoom(getIntent().getStringExtra("room"));
+	tv.setPower(getIntent().getBooleanExtra("power", false));
+	tv.setChannel(getIntent().getIntExtra("channel", -1));
+	tv.setVolume(getIntent().getIntExtra("volume", -1));
+
     }
 
 }

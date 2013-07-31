@@ -1,0 +1,18 @@
+<resources>
+
+    <!-- TV Remote -->
+    <string name="remote_air_room">Aircondition in room: </string>
+    <string name="remote_air_mode">Mode: </string>
+    <string name="remote_air_temperature">Temperature: </string>
+    
+    <!-- TV Remote descritpions-->
+	<string name="remote_air_t_up_desc">Temperature button up</string>
+	<string name="remote_air_t_down_desc">Temperature button down</string>
+	<string name="remote_air_power_desc">Power button</string>
+	
+	    <!-- TV Remote descritpions-->
+	<string name="remote_air_power_on">Aircondition turned on in room </string>
+	<string name="remote_air_power_off">Aircondition turned off in room </string>
+	<string name="remote_air_power_error">There was an error turning the aircondition in room </string>
+    
+</resources>

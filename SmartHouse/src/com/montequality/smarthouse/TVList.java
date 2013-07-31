@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import android.annotation.TargetApi;
 import android.app.ListActivity;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -104,6 +105,15 @@ public class TVList extends ListActivity {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 
 		soundAndVibra.playSoundAndVibra();
+		
+		Intent intent = new Intent(this, RemoteTV.class);
+		intent.putExtra("tvID", tvList.get(position).getId());
+		intent.putExtra("room", tvList.get(position).getRoom());
+		intent.putExtra("power", tvList.get(position).isPower());
+		intent.putExtra("channel", tvList.get(position).getChannel());
+		intent.putExtra("volume", tvList.get(position).getVolume());
+		startActivity(intent);
+
 
 		// TODO Go to remote
 
