@@ -1,0 +1,15 @@
+<resources>
+
+    <!-- TV Remote -->
+    <string name="remote_tv_room">TV in room: </string>
+    <string name="remote_tv_channel">Channel: </string>
+    <string name="remote_tv_volume">Volume: </string>
+    
+    <!-- TV Remote descritpions-->
+	<string name="remote_tv_ch_up_desc">Channel button up</string>
+	<string name="remote_tv_ch_down_desc">Channel button down</string>
+	<string name="remote_tv_v_up_desc">Volume button up</string>
+	<string name="remote_tv_v_down_desc">Volume button down</string>
+	<string name="remote_tv_power_desc">Power button</string>
+    
+</resources>

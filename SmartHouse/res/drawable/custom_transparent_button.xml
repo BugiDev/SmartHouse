@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     
     <item android:state_window_focused="false" android:state_enabled="true"
-        android:drawable="@drawable/btn_default_disabled_focused_holo_light" />
+        android:drawable="@color/tranparent" />
     
     <item android:state_window_focused="false" android:state_enabled="false"
         android:drawable="@drawable/btn_default_disabled_holo_light" />
@@ -11,15 +11,15 @@
         android:drawable="@drawable/btn_default_pressed_holo_light" />
     
     <item android:state_focused="true" android:state_enabled="true"
-        android:drawable="@drawable/btn_default_focused_holo_light" />
+        android:drawable="@color/tranparent" />
     
     <item android:state_enabled="true"
-        android:drawable="@drawable/btn_default_disabled_focused_holo_light" />
+        android:drawable="@color/tranparent" />
     
     <item android:state_focused="true"
-        android:drawable="@drawable/btn_default_disabled_focused_holo_light" />
+        android:drawable="@color/tranparent" />
     
     <item
-         android:drawable="@drawable/btn_default_disabled_holo_light" />
+         android:drawable="@color/tranparent" />
     
 </selector>

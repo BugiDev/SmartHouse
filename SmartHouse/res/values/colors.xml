@@ -3,4 +3,6 @@
    <color name="white">#ffffff</color>
    <color name="blue">#35b4e3</color> 
    <color name="grey">#383838</color> 
+   <color name="tranparent">@android:color/transparent</color> 
+   
 </resources>
