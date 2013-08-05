@@ -131,6 +131,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.montequality.smarthouse.MainDevicesListActivity" />
         </activity>
+        <activity
+            android:name="com.montequality.smarthouse.RemoteLight"
+            android:label="@string/title_activity_remote_light"
+            android:parentActivityName="com.montequality.smarthouse.MainDevicesListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.montequality.smarthouse.MainDevicesListActivity" />
+        </activity>
     </application>
 
 </manifest>

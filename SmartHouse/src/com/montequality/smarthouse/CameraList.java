@@ -131,7 +131,7 @@ public class CameraList extends ListActivity {
 
 				json_data = jArray.getJSONObject(i);
 				
-				Camera camera_single = new Camera(json_data.getInt("id"), json_data.getString("path"), json_data.getString("room"));
+				Camera camera_single = new Camera(json_data.getInt("id"), json_data.getString("path"), json_data.getString("room"), json_data.getBoolean("alarmOnOff"));
 
 				cameraList.add(camera_single);
 			}
